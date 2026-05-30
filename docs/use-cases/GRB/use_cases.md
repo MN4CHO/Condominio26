@@ -73,7 +73,41 @@ Administrador
 
 # CU-04 Asignar Rol a Usuario
 
-(Contenido)
+## Descripción
+Permite al Administrador asignar o modificar el rol de seguridad de una cuenta de usuario existente para controlar sus niveles de acceso dentro del sistema.
+
+## Actor Principal
+Administrador
+
+## Precondiciones
+- El Administrador ha iniciado sesión correctamente.
+- El usuario al que se le asignará el rol debe estar previamente registrado en el sistema.
+
+## Postcondiciones
+- El rol del usuario es actualizado en la base de datos.
+- Los permisos asociados al nuevo rol se aplican de inmediato a la sesión del usuario.
+
+## Escenario Básico
+1. El Administrador solicita gestionar los roles de un usuario.
+2. El Sistema solicita el identificador (correo o nombre) del usuario.
+3. El Administrador ingresa los datos de búsqueda.
+4. El Sistema valida la existencia del usuario y muestra su información actual.
+5. El Administrador selecciona la opción "Asignar nuevo rol".
+6. El Sistema despliega la lista de roles disponibles (ej: Residente, Conserje, Directiva).
+7. El Administrador selecciona el rol deseado y confirma la acción.
+8. El Sistema guarda los cambios y muestra un mensaje de éxito.
+
+## Escenario Alternos
+
+### A1. Usuario no encontrado
+1. En el paso 4, el Sistema no encuentra coincidencias.
+2. El Sistema muestra un mensaje de error: "Usuario inexistente".
+3. El flujo regresa al punto de búsqueda o finaliza.
+
+### A2. El usuario ya posee ese rol
+1. En el paso 7, el Administrador selecciona un rol que el usuario ya tiene asignado.
+2. El Sistema informa que no hubo cambios necesarios.
+3. El caso de uso finaliza.
 
 ---
 
