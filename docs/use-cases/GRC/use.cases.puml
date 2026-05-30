@@ -1,0 +1,65 @@
+@startuml
+
+title Módulo GRC - Gestión de inmueble.
+
+left to right direction
+skinparam usecase {
+  BackgroundColor #EEF2FF
+  BorderColor #6C63D4
+  FontColor #1a1a2e
+  FontSize 13
+}
+skinparam actor {
+  BackgroundColor #F5F5F5
+  BorderColor #444
+  FontColor #1a1a2e
+  FontSize 12
+}
+skinparam rectangle {
+  BackgroundColor #FAFAFA
+  BorderColor #AAAAAA
+  FontColor #333
+  FontSize 14
+  RoundCorner 15
+}
+skinparam ArrowColor #555
+skinparam ArrowFontSize 11
+skinparam ArrowFontColor #555
+skinparam Padding 8
+skinparam shadowing false
+
+actor Administrador as ADM
+actor Propietario   as PROP
+actor Usuario       as USR
+
+rectangle "GRC – Módulo de Gestión de Inmuebles" {
+  usecase "Administrar inmuebles"                        as UC1
+  usecase "Registrar edificios"                          as UC2
+  usecase "Registrar departamentos,\nsuites, estudios y locales" as UC3
+  usecase "Mantener catálogo del condominio"             as UC4
+  usecase "Gestionar características\ndel condominio"    as UC5
+  usecase "Gestionar propiedades\nde cada propietario"   as UC6
+  usecase "Realizar reserva o agenda"                    as UC7
+  usecase "Gestionar notificaciones\ny recordatorios"    as UC8
+  usecase "Actualizar estado\ndel inmueble"              as UC9
+  usecase "Generar reportes\nde cambios"                 as UC10
+}
+
+' --- Relaciones de actores ---
+ADM  --> UC1
+ADM  --> UC4
+ADM  --> UC6
+ADM  --> UC9
+
+PROP --> UC6
+
+USR  --> UC7
+
+' --- Relaciones include ---
+UC1 ..> UC2  : <<include>>
+UC1 ..> UC3  : <<include>>
+UC4 ..> UC5  : <<include>>
+UC7 ..> UC8  : <<include>>
+UC9 ..> UC10 : <<include>>
+
+@enduml
