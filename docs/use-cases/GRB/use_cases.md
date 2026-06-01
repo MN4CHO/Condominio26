@@ -122,7 +122,51 @@ Administrador
 
 # CU-03 Desactivar Cuenta
 
-(Contenido)
+## Descripción
+
+Permite al Administrador desactivar o suspender el acceso de una cuenta de usuario existente en el sistema del condominio, bloqueando su inicio de sesión sin eliminar sus datos históricos.
+
+## Actor Principal
+
+Administrador
+
+## Precondiciones
+
+- El Administrador ha iniciado sesión.
+- Posee permisos para gestionar usuarios.
+- La cuenta del Usuario existe en el sistema y actualmente se encuentra en estado activo.
+
+## Postcondiciones
+
+- El estado de la cuenta se actualiza a "desactivada".
+- El usuario propietario de la cuenta pierde el acceso al sistema.
+
+## Escenario Básico
+
+1. El caso de uso comienza cuando el Administrador selecciona la cuenta de un Usuario específico.
+2. El Sistema muestra la información general de la cuenta y su estado actual.
+3. El Administrador selecciona la opción de desactivar la cuenta.
+4. El Sistema solicita al Administrador una confirmación para proceder con la desactivación.
+5. El Administrador confirma la acción.
+6. El Sistema actualiza el estado de la cuenta a "desactivada" en la base de datos.
+7. El caso de uso termina cuando el Sistema muestra el mensaje "Cuenta desactivada exitosamente".
+
+## Escenarios Alternos
+
+### A1. Cuenta ya desactivada
+
+1. El caso de uso comienza cuando el Administrador selecciona la cuenta de un Usuario.
+2. El Sistema detecta que el estado actual de la cuenta ya es "desactivada".
+3. El Sistema muestra el mensaje "La cuenta seleccionada ya se encuentra desactivada".
+4. El caso de uso finaliza sin realizar modificaciones en el sistema.
+
+### A2. Cancelación de la operación
+
+1. El caso de uso comienza cuando el Administrador selecciona la cuenta de un Usuario.
+2. El Sistema solicita confirmación de la acción (Paso 4 del Escenario Básico).
+3. El Administrador selecciona la opción de cancelar o rechaza la confirmación.
+4. El Sistema muestra el mensaje "Operación cancelada".
+5. El caso de uso finaliza sin modificar el estado de la cuenta.
 
 ---
 
