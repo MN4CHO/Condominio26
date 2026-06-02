@@ -1,0 +1,56 @@
+@startuml GRF_Modulo_Comunicacion
+
+title Módulo GRF - Comunicación
+
+' Configuración de estilo
+left to right direction
+skinparam packageStyle rectangle
+
+skinparam usecase {
+    BackgroundColor #E8F1FF
+    BorderColor #2F5EA8
+    ArrowColor #2F5EA8
+    ActorBorderColor #1F3F73
+    ActorBackgroundColor #EEF5FF
+}
+
+skinparam note {
+    BackgroundColor #E8F8F5
+    BorderColor #1ABC9C
+}
+
+' Definición de actores, casos de uso y relaciones
+rectangle {
+
+    ' Actores
+    actor "Administrador" as ADM
+    actor "Residente" as RES
+    actor "Trabajador" as TRA
+
+    ' Casos de uso
+    usecase "Enviar mensaje a residentes" as CU1
+    usecase "Enviar comunicado a trabajadores" as CU2
+    usecase "Enviar mensaje global" as CU3
+    usecase "Enviar mensaje directo" as CU4
+    usecase "Crear reporte de comunicación" as CU5
+    usecase "Modificar anuncio general" as CU6
+    usecase "Eliminar anuncio general" as CU7
+
+}
+
+' Relaciones Administrador
+ADM --> CU1
+ADM --> CU2
+ADM --> CU3
+ADM --> CU4
+ADM --> CU5
+ADM --> CU6
+ADM --> CU7
+
+' Relaciones Residente
+RES --> CU4
+
+' Relaciones Trabajador
+TRA --> CU4
+
+@enduml
