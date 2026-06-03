@@ -1,0 +1,39 @@
+@startuml
+left to right direction
+
+title Diagrama de Casos de Uso - Módulo Check-in
+
+actor "Administrador" as Administrador
+actor "Personal de\nSeguridad" as Seguridad
+actor "Residente" as Residente
+
+rectangle "Módulo - Check-in" {
+
+  usecase "enviarAlerta" as enviarAlerta
+  usecase "programarVisita" as programarVisita
+  usecase "registrarEntrada" as registrarEntrada
+
+  usecase "notificarEntrada" as notificarEntrada
+  usecase "registrarHistorial" as registrarHistorial
+  usecase "registrarIngresoParqueadero" as registrarIngresoParqueadero
+
+  registrarEntrada -[hidden]right- notificarEntrada
+  notificarEntrada -[hidden]right- registrarHistorial
+  registrarHistorial -[hidden]right- registrarIngresoParqueadero
+
+}
+
+Administrador --> enviarAlerta
+
+Seguridad --> registrarEntrada
+programarVisita --> Seguridad
+Seguridad --> enviarAlerta
+
+Residente --> programarVisita
+enviarAlerta --> Residente
+
+registrarEntrada ..> notificarEntrada : <<include>>
+registrarEntrada ..> registrarHistorial : <<include>>
+registrarIngresoParqueadero ..> registrarEntrada : <<extend>>
+
+@enduml
