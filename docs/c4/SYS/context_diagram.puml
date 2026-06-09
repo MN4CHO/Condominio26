@@ -15,12 +15,15 @@ Person(resident, "Residente", "Realiza pagos, reservas\ny recibe notificaciones.
 Person(owner, "Propietario", "Administra la información\nde sus inmuebles.")
 Person(security, "Personal de Seguridad", "Gestiona visitas\ny controla accesos.")
 
-System(condo, "Sistema de Gestión de Condominio", "Gestiona usuarios, pagos,\ninmuebles, reservas, visitas y comunicaciones.")
+System(condominio_sys, "Sistema de Gestión de Condominio", "Gestiona usuarios, pagos,\ninmuebles, reservas, visitas y comunicaciones.")
+System_Ext(payment_sys, "Sistema de Gestión de Pagos", "Procesa pagos con tarjeta y transferencias.")
 
-Rel(admin, condo, "Administra el sistema")
-Rel(president, condo, "Consulta información\ny recibe reportes")
-Rel(resident, condo, "Gestiona pagos,\nreservas y perfil")
-Rel(owner, condo, "Gestiona propiedades")
-Rel(security, condo, "Registra visitas\ny accesos")
+Rel(admin, condominio_sys, "Administra el sistema")
+Rel(president, condominio_sys, "Consulta información\ny recibe reportes")
+Rel(resident, condominio_sys, "Gestiona pagos,\nreservas y perfil")
+Rel(owner, condominio_sys, "Gestiona propiedades")
+Rel(security, condominio_sys, "Registra visitas\ny accesos")
+
+Rel(condominio_sys, payment_sys, "Procesa y confirma pagos")
 
 @enduml
