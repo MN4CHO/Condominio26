@@ -1,0 +1,56 @@
+@startuml C4_Component_Diagram_GRB
+
+!include ../libs/c4/C4_Component.puml
+
+skinparam defaultTextAlignment center
+skinparam nodesep 50
+skinparam ranksep 60
+
+title Diagrama de Componentes - Módulo GRB: Gestión de Usuarios y Administradores
+
+ContainerDb(database, "Base de Datos", "MySQL", "Almacena credenciales, perfiles,\nroles, permisos y tokens de recuperación.")
+System_Ext(gmail, "Gmail", "SMTP", "Envía el código de 6 dígitos\npara recuperación de contraseña.")
+Container(grf_module, "Módulo GRF", "Java Module", "Gestiona el envío de notificaciones\ny comunicados a residentes y personal.")
+
+Container_Boundary(desktop_app, "Aplicación de Escritorio - Módulo GRB") {
+
+    ' ── Capa de Presentación ─────────────────────────
+    Component(login_ctrl, "Controlador de Autenticación", "JavaFX Controller", "Maneja login y solicitud\nde recuperación de contraseña.")
+    Component(user_ctrl, "Controlador de Usuarios", "JavaFX Controller", "Interfaz para registrar,\nactualizar y desactivar cuentas.")
+    Component(role_ctrl, "Controlador de Roles", "JavaFX Controller", "Interfaz para asignar roles\ny definir permisos.")
+    Component(profile_ctrl, "Controlador de Perfil", "JavaFX Controller", "Permite al usuario actualizar\nsu propia información.")
+
+    ' ── Capa de Lógica de Negocio ────────────────────
+    Component(auth_service, "Servicio de Autenticación", "Java Service", "Valida credenciales, gestiona sesiones\ny coordina recuperación de contraseña.")
+    Component(user_service, "Servicio de Usuarios", "Java Service", "Gestiona el ciclo de vida de cuentas\ny actualización de perfiles.")
+    Component(role_service, "Servicio de Roles y Permisos", "Java Service", "Administra roles, asignación\ny validación de permisos.")
+    Component(email_service, "Servicio de Correo", "Java Service", "Genera código de recuperación\ny lo envía vía Gmail SMTP.")
+
+    ' ── Capa de Acceso a Datos ───────────────────────
+    Component(user_repo, "Repositorio de Usuarios", "Java DAO", "Consultas SQL sobre tablas\nde usuarios y credenciales.")
+    Component(role_repo, "Repositorio de Roles", "Java DAO", "Consultas SQL sobre tablas\nde roles y permisos.")
+    Component(token_repo, "Repositorio de Tokens", "Java DAO", "Persiste el código de recuperación\ncon fecha de expiración.")
+}
+
+Rel(login_ctrl, auth_service, "Delega autenticación")
+Rel(user_ctrl, user_service, "Gestiona cuentas de usuario")
+Rel(role_ctrl, role_service, "Configura roles y permisos")
+Rel(profile_ctrl, user_service, "Actualiza perfil del usuario")
+
+Rel(auth_service, email_service, "Solicita generación y envío de código")
+Rel(auth_service, token_repo, "Guarda y valida código de recuperación")
+Rel(user_service, role_service, "Consulta roles disponibles")
+
+Rel(auth_service, user_repo, "Verifica credenciales")
+Rel(user_service, user_repo, "Lee y escribe datos de usuario")
+Rel(role_service, role_repo, "Lee y escribe roles y permisos")
+Rel(email_service, token_repo, "Lee código generado para envío")
+
+Rel(user_repo, database, "Lee/Escribe", "JDBC/SQL")
+Rel(role_repo, database, "Lee/Escribe", "JDBC/SQL")
+Rel(token_repo, database, "Lee/Escribe", "JDBC/SQL")
+
+Rel(email_service, gmail, "Envía código de recuperación", "SMTP")
+Rel(user_service, grf_module, "Delega envío de notificaciones")
+
+@enduml
