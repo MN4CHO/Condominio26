@@ -3,37 +3,53 @@ left to right direction
 
 title Diagrama de Casos de Uso - Módulo Check-in
 
-actor "Administrador" as Administrador
-actor "Personal de\nSeguridad" as Seguridad
 actor "Residente" as Residente
+actor "Presidente" as Presidente
+actor "Personal de Seguridad" as Seguridad
+actor "Administrador" as Administrador
 
 rectangle "Módulo - Check-in" {
 
   usecase "enviarAlerta" as enviarAlerta
   usecase "programarVisita" as programarVisita
-  usecase "registrarEntrada" as registrarEntrada
 
-  usecase "notificarEntrada" as notificarEntrada
+  usecase "registrarEntrada" as registrarEntrada
+  usecase "registrarEntradaExterna" as registrarEntradaExterna
+
+  usecase "notificarVisitaExterna" as notificarVisitaExterna
   usecase "registrarHistorial" as registrarHistorial
   usecase "registrarIngresoParqueadero" as registrarIngresoParqueadero
+  usecase "gestionarHistorial" as gestionarHistorial
 
-  registrarEntrada -[hidden]right- notificarEntrada
-  notificarEntrada -[hidden]right- registrarHistorial
+  registrarEntrada -[hidden]right- registrarEntradaExterna
+  registrarEntradaExterna -[hidden]right- notificarVisitaExterna
+  notificarVisitaExterna -[hidden]right- registrarHistorial
   registrarHistorial -[hidden]right- registrarIngresoParqueadero
+  registrarIngresoParqueadero -[hidden]right- gestionarHistorial
 
 }
 
-Administrador --> enviarAlerta
+Presidente --> enviarAlerta
+Presidente --> programarVisita
+Presidente --> gestionarHistorial
 
-Seguridad --> registrarEntrada
-programarVisita --> Seguridad
 Seguridad --> enviarAlerta
+Seguridad --> registrarEntrada
+Seguridad --> registrarEntradaExterna
 
 Residente --> programarVisita
-enviarAlerta --> Residente
 
-registrarEntrada ..> notificarEntrada : <<include>>
 registrarEntrada ..> registrarHistorial : <<include>>
-registrarIngresoParqueadero ..> registrarEntrada : <<extend>>
+
+registrarEntradaExterna ..> notificarVisitaExterna : <<include>>
+registrarEntradaExterna ..> registrarHistorial : <<include>>
+
+registrarIngresoParqueadero ..> registrarEntradaExterna : <<extend>>
+
+note right of Administrador
+  El Administrador puede realizar
+  las mismas acciones que el
+  Residente y el Presidente.
+end note
 
 @enduml
