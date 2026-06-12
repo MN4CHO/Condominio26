@@ -1,0 +1,68 @@
+@startuml C4_Component_Diagram_GRD
+
+!include ../libs/c4/C4_Component.puml
+
+skinparam defaultTextAlignment center
+skinparam nodesep 50
+skinparam ranksep 60
+
+title Diagrama de Componentes - Módulo GRD: Gestión de Reservas de Espacios Comunes
+
+' === PERSONAS / ACTORES ===
+Person(residente, "Residente", "Interesado en realizar una reserva o agregar una observación a una reserva hecha previamente.")
+Person(administrador, "Administrador", "Encargado de auditar las reservas y emitir multas a residentes irresponsables de ser necesario.")
+
+' === CONTENEDORES Y MÓDULOS EXTERNOS ===
+ContainerDb(database, "Base de Datos", "MySQL", "Almacena los detalles de las reservas, así como observaciones en la misma.")
+Container(gra_module, "Módulo GRA", "Java Module", "Gestiona el registro de pagos, alícuotas, deudas y multas del condominio.")
+
+' === APLICACIÓN DE ESCRITORIO ===
+Container_Boundary(desktop_app, "Aplicación de Escritorio - Módulo GRD") {
+
+    ' ── Capa de Presentación (Vistas) ─────────────────────────
+    Component(vista_seleccion, "Vista de Selección de Reserva", "JavaFX", "Panel donde se visualizan los horarios de reserva disponibles para espacios comunes y el salón de eventos.")
+    Component(vista_usuario, "Vista de Reservas de Usuario", "JavaFX", "Panel donde el residente puede revisar las reservas que ha realizado, cancelarlas o agregar observaciones.")
+    Component(vista_todas, "Visualización de Todas las Reservas", "JavaFX", "Panel donde el administrador puede visualizar todas las reservas hechas a un espacio.")
+
+    ' ── Capa de Controladores ─────────────────────────────────
+    Component(ctrl_seleccion, "Controlador de Selección de Reservas", "JavaFX Controller", "Recibe la información de la reserva (espacio, día y hora) y genera la solicitud de la reserva.")
+    Component(ctrl_usuario, "Controlador de Reservas de Usuario", "JavaFX Controller", "Recibe las entradas del usuario y gestiona la cancelación de reservas o el registro de observaciones.")
+    Component(ctrl_todas, "Controlador de Visualización de Todas las Reservas", "JavaFX Controller", "Permite filtrar las reservas, gestionar la adjudicación de multas y añadir observaciones.")
+
+    ' ── Capa de Lógica de Negocio (Servicios) ─────────────────
+    Component(serv_reservas, "Servicio de Gestión de Reservas", "Java Service", "Gestiona el ciclo de vida de las reservas (creación, cancelación, consulta y registro de observaciones).")
+    Component(serv_multas, "Servicio de Multas", "Java Service", "Adjudica multas a los usuarios por infracciones en reservas y emite la solicitud de pago correspondiente al Módulo GRA.")
+
+    ' ── Capa de Acceso a Datos (Repositorio) ──────────────────
+    Component(repo_reservas, "Repositorio de Reservas", "Java DAO", "Realiza operaciones y consultas sobre la base de datos relativas a las reservas y observaciones.")
+
+}
+
+' === RELACIONES ===
+
+' Relaciones de Actores con Vistas (UI)
+Rel(residente, vista_seleccion, "Visualiza disponibilidad y solicita reservar", "UI")
+Rel(residente, vista_usuario, "Visualiza, cancela o añade observaciones a sus reservas", "UI")
+Rel(administrador, vista_todas, "Audita y visualiza todas las reservas y aplica multas", "UI")
+
+' Conexión Vista - Controlador
+Rel(vista_seleccion, ctrl_seleccion, "Envía solicitud de reserva seleccionada")
+Rel(vista_usuario, ctrl_usuario, "Solicita cancelación o registro de observaciones")
+Rel(vista_todas, ctrl_todas, "Solicita filtrar reservas o aplicar multas")
+
+' Conexión Controlador - Servicio
+Rel(ctrl_seleccion, serv_reservas, "Solicita el registro de una reserva")
+Rel(ctrl_usuario, serv_reservas, "Solicita la cancelación o registro de observaciones")
+Rel(ctrl_todas, serv_reservas, "Consulta, filtra reservas y registra observaciones")
+Rel(ctrl_todas, serv_multas, "Solicita la adjudicación de multa por conflicto")
+
+' Conexión Servicio - Repositorio
+Rel(serv_reservas, repo_reservas, "Consulta, guarda y actualiza información de reservas")
+
+' Conexión Repositorio - Base de Datos (SQL)
+Rel(repo_reservas, database, "Lee y escribe datos de reservas", "JDBC/SQL")
+
+' Conexión con Módulos Externos
+Rel(serv_multas, gra_module, "Envía solicitudes de pago por concepto de multas", "API REST")
+
+@enduml
