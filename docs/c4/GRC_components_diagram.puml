@@ -1,0 +1,38 @@
+@startuml C4_Component_Diagram_GRC
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Diagrama de Componentes - Módulo GRC: Gestión de Inmuebles
+
+ContainerDb(database, "Base de Datos", "MySQL", "Almacena inmuebles, edificios, catálogos e incidencias.")
+Container(grf_module, "Módulo GRF", "Java Module", "Notificaciones y comunicados.")
+
+Container_Boundary(desktop_app, "Módulo GRC") {
+    ' Capa Presentación
+    Component(prop_ctrl, "Controlador Propiedades", "JavaFX", "UI para gestión de edificios y unidades.")
+    Component(cat_ctrl, "Controlador Catálogo", "JavaFX", "UI para características del condominio.")
+    Component(event_ctrl, "Controlador Incidencias", "JavaFX", "UI para casos fortuitos.")
+
+    ' Capa Lógica
+    Component(prop_service, "Servicio Propiedades", "Java Service", "Lógica de registro de unidades y estados.")
+    Component(cat_service, "Servicio Catálogo", "Java Service", "Lógica de gestión de características.")
+    Component(event_service, "Servicio Incidencias", "Java Service", "Lógica de casos fortuitos y alertas.")
+    Component(report_service, "Servicio Reportes", "Java Service", "Genera bitácora de cambios.")
+
+    ' Capa Datos
+    Component(prop_repo, "Repositorio Propiedades", "Java DAO", "Consultas SQL para Inmuebles.")
+    Component(event_repo, "Repositorio Incidencias", "Java DAO", "Persistencia de casos fortuitos.")
+}
+
+Rel(prop_ctrl, prop_service, "Usa")
+Rel(cat_ctrl, cat_service, "Usa")
+Rel(event_ctrl, event_service, "Usa")
+
+Rel(prop_service, report_service, "Registra cambios")
+Rel(event_service, grf_module, "Notifica eventos")
+
+Rel(prop_service, prop_repo, "CRUD")
+Rel(event_service, event_repo, "Persiste log")
+
+Rel(prop_repo, database, "SQL/JDBC")
+Rel(event_repo, database, "SQL/JDBC")
+@enduml
