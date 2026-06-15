@@ -10,6 +10,8 @@ title Diagrama de Componentes - Módulo GRA: Gestión Pagos y Finanzas
 
 ContainerDb(database, "Base de Datos", "MySQL", "Almacena los detalles de los pagos realizados por alicuota, por multas, por mora y por gastos")
 System_Ext(payment_sys, "Sistema de Gestión de Pagos", "Procesa pagos con tarjeta y transferencias.")
+' TODO: Procesa o Registra, actualizar casos de uso específicos para cada tipo de pago.
+
 Container(grf_module, "Módulo GRF", "Java Module", "Gestiona el envío de notificaciones\ny comunicados a residentes y personal.")
 Container(grc_module, "Módulo GRC", "Java Module", "Administra el catálogo detallado y los registros de propiedad de todas las unidades y áreas comunes del condominio.")
 Container(grd_module, "Módulo GRD", "Java Module", "Permite visualizar la disponibilidad, agendar, cancelar de forma autónoma las reservas de las áreas comunes del condominio y agregar observaciones.")
@@ -20,6 +22,8 @@ Container_Boundary(desktop_app, "Aplicación de Escritorio - Módulo GRA") {
     Component(vista_pagos, "Vista de Registro de Pagos", "JavaFX", "Interfaz para registrar y modificar pagos de alícuota, multas y reservas.")
     Component(vista_deuda, "Vista de Registro de Deudas", "JavaFX", "Interfaz para registrar y modificar deudas de alícuota, multas y reservas.")
     ' Component(vista_gastos, "Vista de Registro de Gastos", "JavaFX", "Interfaz para registrar gastos comunes y extraordinarios.")
+    ' TODO: Especificar que los gastos se registran a través de solicitudes, y que el controlador de solicitudes se encarga de registrar los gastos aprobados.
+
     Component(vista_reportes, "Vista de Reportes Generales", "JavaFX", "Interfaz para generar reportes de pagos, y gastos.")
     Component(vista_parametros, "Vista de Parámetros", "JavaFX", "Interfaz para definir valores de alicuota y entidades bancarias.")
     Component(vista_solicitudes, "Vista de Solicitudes", "JavaFX", "Interfaz para realizar y aceptar solicitudes referentes a los pagos.")
@@ -27,6 +31,8 @@ Container_Boundary(desktop_app, "Aplicación de Escritorio - Módulo GRA") {
 
     ' ── Controladores ─────────────────────────
     Component(ctrl_pagos, "Controlador de Registro de Pagos", "Java Controller", "Recibe las acciones de la interfaz y registra, modifica o notifica pagos de alícuota, multas y reservas.")
+    ' TODO: Controlador que modifica, además de eliminar forma de pago recurrente.???
+
     Component(ctrl_deudas, "Controlador de Registro de Deudas", "Java Controller", "Recibe las acciones de la interfaz y registra, modifica o notifica deudas de alícuota, multas y reservas.")
     ' Component(ctrl_gastos, "Controlador de Registro de Gastos", "Java Controller", "Recibe las acciones de la interfaz y registra gastos comunes y extraordinarios.")
     Component(ctrl_reportes, "Controlador de Reportes Generales", "Java Controller", "Recibe las acciones de la interfaz y genera reportes de pagos, y gastos.")
