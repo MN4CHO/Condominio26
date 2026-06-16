@@ -14,43 +14,66 @@ Container(grf_module, "Módulo GRF", "Java Module", "Gestiona el envío de notif
 
 Container_Boundary(desktop_app, "Aplicación de Escritorio - Módulo GRB") {
 
-    ' ── Capa de Presentación ─────────────────────────
-    Component(login_ctrl, "Controlador de Autenticación", "JavaFX Controller", "Maneja login y solicitud\nde recuperación de contraseña.")
-    Component(user_ctrl, "Controlador de Usuarios", "JavaFX Controller", "Interfaz para registrar,\nactualizar y desactivar cuentas.")
-    Component(role_ctrl, "Controlador de Roles", "JavaFX Controller", "Interfaz para asignar roles\ny definir permisos.")
-    Component(profile_ctrl, "Controlador de Perfil", "JavaFX Controller", "Permite al usuario actualizar\nsu propia información.")
+    ' ── VIEW ─────────────────────────────────────────
+    Component(login_view,   "Vista de Login",   "FXML / JavaFX Scene", "Formulario de inicio de sesión\ny solicitud de recuperación.")
+    Component(usuario_view, "Vista de Usuario", "FXML / JavaFX Scene", "Pantalla de registro,\nlistado y desactivación de cuentas.")
+    Component(rol_view,     "Vista de Roles",     "FXML / JavaFX Scene", "Pantalla de asignación\nde roles y permisos.")
+    Component(perfil_view,  "Vista de Perfil",  "FXML / JavaFX Scene", "Pantalla de edición\ndel perfil personal.")
 
-    ' ── Capa de Lógica de Negocio ────────────────────
-    Component(auth_service, "Servicio de Autenticación", "Java Service", "Valida credenciales, gestiona sesiones\ny coordina recuperación de contraseña.")
-    Component(user_service, "Servicio de Usuarios", "Java Service", "Gestiona el ciclo de vida de cuentas\ny actualización de perfiles.")
-    Component(role_service, "Servicio de Roles y Permisos", "Java Service", "Administra roles, asignación\ny validación de permisos.")
-    Component(email_service, "Servicio de Correo", "Java Service", "Genera código de recuperación\ny lo envía vía Gmail SMTP.")
+    ' ── CONTROLLER ───────────────────────────────────
+    Component(login_ctrl,   "Controlador de Login",   "JavaFX Controller", "Captura credenciales y delega\nautenticación y recuperación.")
+    Component(usuario_ctrl, "Controlador de Usuarios", "JavaFX Controller", "Gestiona acciones sobre\ncuentas de usuario.")
+    Component(rol_ctrl,     "Controlador de Roles",     "JavaFX Controller", "Gestiona asignación\ny configuración de roles.")
+    Component(perfil_ctrl,  "Controlador de Perfiles",  "JavaFX Controller", "Gestiona actualización\ndel perfil del usuario.")
 
-    ' ── Capa de Acceso a Datos ───────────────────────
-    Component(user_repo, "Repositorio de Usuarios", "Java DAO", "Consultas SQL sobre tablas\nde usuarios y credenciales.")
-    Component(role_repo, "Repositorio de Roles", "Java DAO", "Consultas SQL sobre tablas\nde roles y permisos.")
-    Component(token_repo, "Repositorio de Tokens", "Java DAO", "Persiste el código de recuperación\ncon fecha de expiración.")
+    ' ── MODEL: Servicios ─────────────────────────────
+    Component(auth_service,  "Servicio de Autenticacion", "Java Service", "Valida credenciales, gestiona sesiones\ny coordina recuperación de contraseña.")
+    Component(user_service,  "Servicio de Usuarios",       "Java Service", "Gestiona ciclo de vida de cuentas\ny actualización de perfiles.")
+    Component(role_service,  "Servicio de Roles",         "Java Service", "Administra roles, asignación\ny validación de permisos.")
+    Component(email_service, "Servicio de Correo",        "Java Service", "Genera y envía el código\nde 6 dígitos vía Gmail SMTP.")
+
+    ' ── MODEL: Repositorios (DAO) ────────────────────
+    Component(user_repo,  "Repositorio de Usuarios", "Java DAO", "Consultas SQL sobre tablas\nde usuarios y credenciales.")
+    Component(role_repo,  "Repositorio de Roles",     "Java DAO", "Consultas SQL sobre tablas\nde roles y permisos.")
+    Component(token_repo, "Repositorio de Tokens",   "Java DAO", "Persiste el código de recuperación\ncon fecha de expiración.")
 }
 
-Rel(login_ctrl, auth_service, "Delega autenticación")
-Rel(user_ctrl, user_service, "Gestiona cuentas de usuario")
-Rel(role_ctrl, role_service, "Configura roles y permisos")
-Rel(profile_ctrl, user_service, "Actualiza perfil del usuario")
+' VIEW → CONTROLLER
+Rel(login_view,   login_ctrl,   "Eventos de usuario")
+Rel(usuario_view, usuario_ctrl, "Eventos de usuario")
+Rel(rol_view,     rol_ctrl,     "Eventos de usuario")
+Rel(perfil_view,  perfil_ctrl,  "Eventos de usuario")
 
-Rel(auth_service, email_service, "Solicita generación y envío de código")
-Rel(auth_service, token_repo, "Guarda y valida código de recuperación")
-Rel(user_service, role_service, "Consulta roles disponibles")
+' CONTROLLER → SERVICE (Model)
+Rel(login_ctrl,   auth_service,  "Delega autenticación y recuperación")
+Rel(usuario_ctrl, user_service,  "Gestiona cuentas")
+Rel(rol_ctrl,     role_service,  "Configura roles y permisos")
+Rel(perfil_ctrl,  user_service,  "Actualiza perfil")
 
-Rel(auth_service, user_repo, "Verifica credenciales")
-Rel(user_service, user_repo, "Lee y escribe datos de usuario")
-Rel(role_service, role_repo, "Lee y escribe roles y permisos")
+' SERVICE → SERVICE
+Rel(auth_service,  email_service, "Solicita generación y envío de código")
+Rel(user_service,  role_service,  "Consulta roles disponibles")
+Rel(user_service,  grf_module,    "Delega envío de notificaciones")
+
+' SERVICE → DAO
+Rel(auth_service,  user_repo,  "Verifica credenciales")
+Rel(auth_service,  token_repo, "Guarda y valida token")
+Rel(user_service,  user_repo,  "Lee y escribe datos de usuario")
+Rel(role_service,  role_repo,  "Lee y escribe roles y permisos")
 Rel(email_service, token_repo, "Lee código generado para envío")
 
-Rel(user_repo, database, "Lee/Escribe", "JDBC/SQL")
-Rel(role_repo, database, "Lee/Escribe", "JDBC/SQL")
+' DAO → BD
+Rel(user_repo,  database, "Lee/Escribe", "JDBC/SQL")
+Rel(role_repo,  database, "Lee/Escribe", "JDBC/SQL")
 Rel(token_repo, database, "Lee/Escribe", "JDBC/SQL")
 
+' Externo
 Rel(email_service, gmail, "Envía código de recuperación", "SMTP")
-Rel(user_service, grf_module, "Delega envío de notificaciones")
+
+' CONTROLLER → VIEW (actualización de pantalla)
+Rel(login_ctrl,   login_view,   "Actualiza estado de la UI")
+Rel(usuario_ctrl, usuario_view, "Actualiza estado de la UI")
+Rel(rol_ctrl,     rol_view,     "Actualiza estado de la UI")
+Rel(perfil_ctrl,  perfil_view,  "Actualiza estado de la UI")
 
 @enduml
