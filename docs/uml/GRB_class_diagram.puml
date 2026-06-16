@@ -1,0 +1,173 @@
+@startuml Diagrama_Clases_GRB
+
+title Diagrama de Clases — Módulo GRB: Gestión de Usuarios y Administradores
+
+' ── ENUMERACIONES ────────────────────────────────────────
+enum EstadoCuenta {
+  ACTIVA
+  DESACTIVADA
+}
+
+enum NombreRol {
+  ADMINISTRADOR
+  PRESIDENTE
+  RESIDENTE
+  PROPIETARIO
+  SEGURIDAD
+}
+
+' ── ENTIDADES DE DOMINIO ─────────────────────────────────
+class Usuario {
+  - idUsuario : UUID
+  - nombre    : String
+  - apellido  : String
+  - correo    : String
+}
+
+class Cuenta {
+  - idCuenta          : UUID
+  - contrasena        : String
+  - estado            : EstadoCuenta
+  - fechaCreacion     : Date
+  - fechaModificacion : Date
+  --
+  + activar()                   : void
+  + desactivar()                : void
+  + actualizarInfo(datos : Map) : void
+}
+
+class Perfil {
+  - idPerfil           : UUID
+  - telefono           : String
+  - direccion          : String
+  - fotoPerfil         : String
+  - fechaActualizacion : Date
+  --
+  + actualizar(datos : Map) : void
+}
+
+class Rol {
+  - idRol       : UUID
+  - nombre      : NombreRol
+  - descripcion : String
+  --
+  + obtenerPermisos() : List<Permiso>
+}
+
+class Permiso {
+  - idPermiso   : UUID
+  - nombre      : String
+  - descripcion : String
+  - recurso     : String
+  --
+  + esValido() : boolean
+}
+
+class TokenRestablecimiento {
+  - idToken         : UUID
+  - codigo          : String
+  - fechaExpiracion : Date
+  - intentos        : Integer
+  --
+  + esValido()     : boolean
+  + estaExpirado() : boolean
+}
+
+' ── INTERFACES DE SERVICIOS ──────────────────
+interface IServicioAutenticacion {
+  + validarCredenciales(correo : String, pass : String)       : boolean
+  + iniciarRecuperacion(correo : String)                      : void
+  + validarToken(codigo : String)                             : boolean
+  + restablecerContrasena(idToken : UUID, nueva : String)     : void
+}
+
+interface IServicioUsuario {
+  + registrarCuenta(datos : Map)                    : Cuenta
+  + actualizarCuenta(idCuenta : UUID, datos : Map)  : void
+  + desactivarCuenta(idCuenta : UUID)               : void
+  + actualizarPerfil(idUsuario : UUID, datos : Map) : void
+}
+
+interface IServicioRoles {
+  + asignarRol(idCuenta : UUID, idRol : UUID)         : void
+  + definirPermisos(idRol : UUID, permisos : List)    : void
+  + obtenerRoles()                                    : List<Rol>
+  + validarPermiso(idCuenta : UUID, recurso : String) : boolean
+}
+
+interface IServicioCorreo {
+  + generarCodigo()                               : String
+  + enviarToken(correo : String, codigo : String) : void
+}
+
+' ── IMPLEMENTACIONES DE SERVICIOS ────────────────────────
+class ServicioAutenticacion <<service>> implements IServicioAutenticacion {
+}
+
+class ServicioUsuario <<service>> implements IServicioUsuario {
+}
+
+class ServicioRoles <<service>> implements IServicioRoles {
+}
+
+class ServicioCorreo <<service>> implements IServicioCorreo {
+}
+
+' ── INTERFACES DE REPOSITORIOS ─────────────────────
+interface IUsuarioLector <<repository>> {
+  + findById(id : UUID)           : Usuario
+  + findByCorreo(correo : String) : Usuario
+}
+
+interface IUsuarioEscritor <<repository>> {
+  + save(usuario : Usuario)   : void
+  + update(usuario : Usuario) : void
+}
+
+interface IRepositorioRol <<repository>> {
+  + findById(id : UUID)                        : Rol
+  + findAll()                                  : List<Rol>
+  + save(rol : Rol)                            : void
+  + asignarACuenta(idCuenta : UUID, idRol : UUID) : void
+}
+
+interface IRepositorioToken <<repository>> {
+  + save(token : TokenRestablecimiento)   : void
+  + findByCodigo(codigo : String)         : TokenRestablecimiento
+  + deleteByIdCuenta(idCuenta : UUID)     : void
+}
+
+' ── RELACIONES ENTRE ENTIDADES ───────────────────────────
+Usuario "1" *-- "1" Cuenta  : posee >
+Usuario "1" *-- "1" Perfil  : tiene >
+
+Cuenta ..> EstadoCuenta : usa
+Rol   ..> NombreRol     : usa
+
+Cuenta "1" -- "*" Rol       : asignado a >
+Rol    "1" *-- "1..*" Permiso : define >
+
+Cuenta "1" -- "0..*" TokenRestablecimiento : genera >
+
+' ── DEPENDENCIAS SERVICIOS → ENTIDADES ───────────────────
+ServicioAutenticacion ..> Cuenta                : <<usa>>
+ServicioAutenticacion ..> TokenRestablecimiento : <<usa>>
+ServicioUsuario       ..> Cuenta                : <<usa>>
+ServicioUsuario       ..> Perfil                : <<usa>>
+ServicioRoles         ..> Rol                   : <<usa>>
+ServicioRoles         ..> Permiso               : <<usa>>
+ServicioCorreo        ..> TokenRestablecimiento : <<usa>>
+
+' ── DEPENDENCIAS SERVICIOS → REPOSITORIOS ────────────────
+ServicioAutenticacion ..> IUsuarioLector   : <<usa>>
+ServicioAutenticacion ..> IRepositorioToken : <<usa>>
+ServicioUsuario       ..> IUsuarioLector   : <<usa>>
+ServicioUsuario       ..> IUsuarioEscritor : <<usa>>
+ServicioRoles         ..> IRepositorioRol  : <<usa>>
+ServicioCorreo        ..> IRepositorioToken : <<usa>>
+
+' ── DEPENDENCIAS ENTRE SERVICIOS ─────────────────────────
+ServicioAutenticacion ..> IServicioCorreo : <<usa>>
+ServicioUsuario       ..> IServicioRoles  : <<usa>>
+
+@enduml
