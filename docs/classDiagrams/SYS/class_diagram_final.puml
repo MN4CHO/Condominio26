@@ -105,6 +105,7 @@ package "GRB - Usuarios y Cuentas" {
     Rol "1" *-- "1..*" Permiso : define
     Cuenta "*" -- "*" Rol : asignado a
     Cuenta "1" -- "0..*" TokenRestablecimiento : genera
+    SesionUsuario "1" --> "1" Usuario : <<mantiene sesión de>>
 }
 
 ' ==========================================
@@ -234,6 +235,8 @@ package "GRC - Inmuebles y Espacios" {
     PlazaPropietario "*" --> "1" Propiedad : asignada a
     CatalogoCondominio ..> IteratorInmueble : crea
     InmuebleFactoryImpl ..> Inmueble : <<instancia>>
+    GestorPlazas ..> Parqueadero : <<gestiona>>
+GestorPlazas ..> Plaza : <<asigna/libera>>
 }
 
 ' ==========================================
