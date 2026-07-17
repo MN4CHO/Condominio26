@@ -121,10 +121,8 @@
                                       styleClass="submenu-item" text="Añadir Reserva"/>
                               <Button mnemonicParsing="false" onAction="#irAVerReserva"
                                       styleClass="submenu-item" text="Ver Reserva"/>
-                              <Button mnemonicParsing="false" onAction="#irAAgregarObservacion"
-                                      styleClass="submenu-item" text="Agregar Observación"/>
-                              <Button mnemonicParsing="false" onAction="#irACancelarObservacion"
-                                      styleClass="submenu-item" text="Cancelar Observación"/>
+                              <Button mnemonicParsing="false" onAction="#irAAuditarReservas"
+                                      styleClass="submenu-item" text="Auditar Reservas"/>
                            </children>
                         </VBox>
                      </children>
