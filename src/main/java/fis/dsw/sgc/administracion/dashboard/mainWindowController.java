@@ -148,8 +148,7 @@ public class mainWindowController {
 
     @FXML void irAAnadirReserva(ActionEvent event)       { cargarVista("/reservas/fxml/anadirReserva.fxml");       }
     @FXML void irAVerReserva(ActionEvent event)          { cargarVista("/reservas/fxml/verReserva.fxml");          }
-    @FXML void irAAgregarObservacion(ActionEvent event)  { cargarVista("/reservas/fxml/agregarObservacion.fxml");  }
-    @FXML void irACancelarObservacion(ActionEvent event) { cargarVista("/reservas/fxml/cancelarObservacion.fxml"); }
+    @FXML void irAAuditarReservas(ActionEvent event)     { cargarVista("/reservas/fxml/auditarReservas.fxml");     }
 
     // ==================== Submenú Check-In ====================
 
@@ -189,6 +188,7 @@ public class mainWindowController {
             contentPane.getChildren().clear();
             contentPane.getChildren().add(vista);
         } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
             contentPane.getChildren().clear();
             contentPane.getChildren().add(crearPlaceholder("Vista aún no implementada:\n" + rutaFxml));
         }
