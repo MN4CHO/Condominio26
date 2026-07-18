@@ -41,8 +41,7 @@ public class mainWindowController {
     private static final String HOME_BG_PATH = "/administracion/img/home_bg.jpg";
     private static final String CLASE_ACTIVO = "active";
 
-    private Button botonSeccionActiva = null;
-    private VBox   submenuActivo      = null;
+    // Se eliminaron las variables que restringían a un solo menú activo a la vez
 
     @FXML
     public void initialize() {
@@ -73,56 +72,40 @@ public class mainWindowController {
         return new Image(stream);
     }
 
-    // ==================== Selección visual del menú ====================
-
-    private void marcarSeccionActiva(Button boton) {
-        if (botonSeccionActiva != null) botonSeccionActiva.getStyleClass().remove(CLASE_ACTIVO);
-        if (boton != null)             boton.getStyleClass().add(CLASE_ACTIVO);
-        botonSeccionActiva = boton;
-    }
-
     // ==================== Toggle genérico de submenús ====================
 
     private void toggleSubmenu(Button boton, VBox submenu) {
         boolean estaAbierto = submenu.isVisible();
-
-        // Si hay otro submenú abierto, cerrarlo primero
-        if (submenuActivo != null && submenuActivo != submenu) {
-            submenuActivo.setVisible(false);
-            submenuActivo.setManaged(false);
-        }
-
         boolean nuevoEstado = !estaAbierto;
+
+        // Solo cambiamos la visibilidad del menú clickeado, sin afectar a los demás
         submenu.setVisible(nuevoEstado);
         submenu.setManaged(nuevoEstado);
-        submenuActivo = nuevoEstado ? submenu : null;
 
+        // Alternamos la clase visual activa exclusivamente para el botón clickeado
         if (nuevoEstado) {
-            marcarSeccionActiva(boton);
-        } else if (botonSeccionActiva == boton) {
-            marcarSeccionActiva(null);
+            if (!boton.getStyleClass().contains(CLASE_ACTIVO)) {
+                boton.getStyleClass().add(CLASE_ACTIVO);
+            }
+        } else {
+            boton.getStyleClass().remove(CLASE_ACTIVO);
         }
     }
 
     // ==================== Botones del menú lateral ====================
 
     @FXML void toggleAdministracion(ActionEvent event) { toggleSubmenu(btnAdministracion, submenuAdministracion); }
-    @FXML void toggleFinanzas(ActionEvent event)        { toggleSubmenu(btnFinanzas,       submenuFinanzas);       }
-    @FXML void toggleInmuebles(ActionEvent event)       { toggleSubmenu(btnInmuebles,      submenuInmuebles);      }
-    @FXML void toggleReservas(ActionEvent event)        { toggleSubmenu(btnReservas,        submenuReservas);       }
-    @FXML void toggleCheckIn(ActionEvent event)         { toggleSubmenu(btnCheckIn,         submenuCheckIn);        }
-    @FXML void toggleComunicacion(ActionEvent event)    { toggleSubmenu(btnComunicacion,    submenuComunicacion);   }
+    @FXML void toggleFinanzas(ActionEvent event)       { toggleSubmenu(btnFinanzas,       submenuFinanzas);       }
+    @FXML void toggleInmuebles(ActionEvent event)      { toggleSubmenu(btnInmuebles,      submenuInmuebles);      }
+    @FXML void toggleReservas(ActionEvent event)       { toggleSubmenu(btnReservas,       submenuReservas);       }
+    @FXML void toggleCheckIn(ActionEvent event)        { toggleSubmenu(btnCheckIn,        submenuCheckIn);        }
+    @FXML void toggleComunicacion(ActionEvent event)   { toggleSubmenu(btnComunicacion,   submenuComunicacion);   }
 
     // ==================== Inicio ====================
 
     @FXML
     void irAInicio(ActionEvent event) {
-        if (submenuActivo != null) {
-            submenuActivo.setVisible(false);
-            submenuActivo.setManaged(false);
-            submenuActivo = null;
-        }
-        marcarSeccionActiva(null);
+        // Se eliminó la lógica que forzaba el cierre de los menús al ir a la pantalla de inicio
         contentPane.getChildren().clear();
         Image fondo = cargarImagen(HOME_BG_PATH);
         if (fondo != null) {
@@ -144,13 +127,13 @@ public class mainWindowController {
     @FXML void irAConsultarDeudas(ActionEvent event)         { cargarVista("/finanzas/fxml/consultarDeudas.fxml");         }
     @FXML void irARegistrarDeuda(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
     @FXML void irAConfiguracionFinanciera(ActionEvent event) { cargarVista("/finanzas/fxml/configuracionFinanciera.fxml"); }
-    @FXML void irAGenerarReportePagosInternos(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
     @FXML void irARegistrarPagoExterno(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
     @FXML void irAGenerarReporteGastos(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
     @FXML void irASolicitarPagoEnCuotas(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
     @FXML void irAGenerarCertificadoNoDeudor(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
     @FXML void irAConsultarPagos(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
     @FXML void irAConsultarReporteRendicionCuentas(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
+    @FXML void irAGenerarReportePagosInternos(ActionEvent event)     { cargarVista("/finanzas/fxml/generarReportePagosRealizados.fxml"); }
 
 
     // ==================== Submenú Reservas ====================
@@ -171,12 +154,7 @@ public class mainWindowController {
 
     @FXML
     void irANotificaciones(ActionEvent event) {
-        if (submenuActivo != null) {
-            submenuActivo.setVisible(false);
-            submenuActivo.setManaged(false);
-            submenuActivo = null;
-        }
-        marcarSeccionActiva(null);
+        // Se eliminó la lógica que forzaba el cierre de los menús al ver las notificaciones
         contentPane.getChildren().clear();
         contentPane.getChildren().add(crearPlaceholder("No hay notificaciones"));
     }
