@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox fx:controller="fis.dsw.sgc.finanzas.controller.ConfiguracionFinancieraController"
+      alignment="TOP_CENTER"
+      maxHeight="1.7976931348623157E308"
+      maxWidth="1.7976931348623157E308"
+      prefHeight="600.0"
+      prefWidth="900.0"
+      spacing="16.0"
+      styleClass="module-content"
+      stylesheets="@../css/configuracionFinanciera.css"
+      xmlns="http://javafx.com/javafx/26"
+      xmlns:fx="http://javafx.com/fxml/1">
+
+    <padding>
+        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
+    </padding>
+
+    <children>
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <children>
+                <FontIcon iconLiteral="fa-cogs" iconSize="20" styleClass="module-title-icon"/>
+                <Label styleClass="module-title" text="Configuración financiera"/>
+            </children>
+        </HBox>
+        <Label styleClass="module-subtitle"
+               text="Defina el valor mensual de alícuotas y administre las entidades bancarias habilitadas para recibir transferencias."/>
+
+        <ScrollPane fitToWidth="true"
+                    maxHeight="1.7976931348623157E308"
+                    maxWidth="1.7976931348623157E308"
+                    styleClass="config-scroll"
+                    VBox.vgrow="ALWAYS">
+            <content>
+                <VBox maxWidth="1.7976931348623157E308" spacing="16.0">
+                    <children>
+
+                        <!-- ===== Valor mensual de alícuotas ===== -->
+                        <VBox maxWidth="1.7976931348623157E308" spacing="14.0" styleClass="module-card">
+                            <padding>
+                                <Insets bottom="24.0" left="24.0" right="24.0" top="24.0"/>
+                            </padding>
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                    <children>
+                                        <FontIcon iconLiteral="fa-percent" iconSize="15" styleClass="section-icon"/>
+                                        <Label styleClass="module-section-title" text="Valor mensual de alícuotas"/>
+                                    </children>
+                                </HBox>
+
+                                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                    <children>
+                                        <Label styleClass="form-label" text="Valor actual:"/>
+                                        <Label fx:id="lblValorActualAlicuota" styleClass="module-section-title" text="\$0.00"/>
+                                    </children>
+                                </HBox>
+
+                                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                    <children>
+                                        <Label styleClass="form-label" text="Nuevo valor"/>
+                                        <TextField fx:id="txtNuevoValorAlicuota"
+                                                   maxWidth="220.0"
+                                                   prefWidth="220.0"
+                                                   promptText="Ej. 45.00"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <Button fx:id="btnGuardarAlicuota"
+                                                mnemonicParsing="false"
+                                                onAction="#guardarValorAlicuota"
+                                                styleClass="primary-button"
+                                                text="Guardar valor"/>
+                                    </children>
+                                </HBox>
+
+                                <Label fx:id="lblMensajeAlicuota" styleClass="message-label, message-info" text=""/>
+                            </children>
+                        </VBox>
+
+                        <!-- ===== Entidades bancarias ===== -->
+                        <VBox maxWidth="1.7976931348623157E308" spacing="14.0" styleClass="module-card">
+                            <padding>
+                                <Insets bottom="24.0" left="24.0" right="24.0" top="24.0"/>
+                            </padding>
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                    <children>
+                                        <FontIcon iconLiteral="fa-university" iconSize="15" styleClass="section-icon"/>
+                                        <Label styleClass="module-section-title" text="Entidades bancarias"/>
+                                    </children>
+                                </HBox>
+                                <Label styleClass="module-subtitle"
+                                       text="Registre las cuentas habilitadas para que los residentes realicen pagos por transferencia."
+                                       wrapText="true"/>
+
+                                <GridPane hgap="12.0" vgap="12.0" maxWidth="1.7976931348623157E308">
+                                    <columnConstraints>
+                                        <ColumnConstraints minWidth="170.0" prefWidth="180.0"/>
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" prefWidth="360.0"/>
+                                        <ColumnConstraints minWidth="170.0" prefWidth="180.0"/>
+                                        <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" prefWidth="360.0"/>
+                                    </columnConstraints>
+                                    <children>
+                                        <Label styleClass="form-label" text="Entidad bancaria"
+                                               GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                        <TextField fx:id="txtNombreEntidad"
+                                                   maxWidth="1.7976931348623157E308"
+                                                   promptText="Ej. Banco Pichincha"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                                        <Label styleClass="form-label" text="Número de cuenta"
+                                               GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                                        <TextField fx:id="txtNumeroCuenta"
+                                                   maxWidth="1.7976931348623157E308"
+                                                   promptText="Número de cuenta"
+                                                   GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                                        <Label styleClass="form-label" text="Cédula del titular"
+                                               GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="txtCedulaTitular"
+                                                   maxWidth="1.7976931348623157E308"
+                                                   promptText="Cédula del titular de la cuenta"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                                        <Label styleClass="form-label" text="Tipo de cuenta"
+                                               GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                                        <ComboBox fx:id="cbTipoCuenta"
+                                                  maxWidth="1.7976931348623157E308"
+                                                  promptText="Seleccione el tipo de cuenta"
+                                                  GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                                        <Label styleClass="form-label" text="Correo del titular"
+                                               GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                        <TextField fx:id="txtCorreoTitular"
+                                                   maxWidth="1.7976931348623157E308"
+                                                   promptText="correo@ejemplo.com"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                    </children>
+                                </GridPane>
+
+                                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                    <children>
+                                        <Button fx:id="btnRegistrarEntidad"
+                                                mnemonicParsing="false"
+                                                onAction="#registrarEntidadBancaria"
+                                                styleClass="primary-button"
+                                                text="Registrar entidad"/>
+                                        <Button fx:id="btnLimpiarEntidad"
+                                                mnemonicParsing="false"
+                                                onAction="#limpiarFormularioEntidad"
+                                                styleClass="secondary-button"
+                                                text="Limpiar"/>
+                                    </children>
+                                </HBox>
+
+                                <Label fx:id="lblMensajeEntidad" styleClass="message-label, message-info" text=""/>
+
+                                <VBox spacing="8.0" styleClass="table-card">
+                                    <padding>
+                                        <Insets bottom="12.0" left="12.0" right="12.0" top="12.0"/>
+                                    </padding>
+                                    <children>
+                                        <Label styleClass="module-section-title" text="Entidades registradas"/>
+                                        <TableView fx:id="tablaEntidades" prefHeight="220.0"
+                                                   maxWidth="1.7976931348623157E308">
+                                            <columns>
+                                                <TableColumn fx:id="colNombreEntidad" prefWidth="200.0" text="Entidad"/>
+                                                <TableColumn fx:id="colNumeroCuenta" prefWidth="160.0" text="N.° cuenta"/>
+                                                <TableColumn fx:id="colTipoCuenta" prefWidth="120.0" text="Tipo"/>
+                                                <TableColumn fx:id="colCedulaTitular" prefWidth="140.0" text="Cédula titular"/>
+                                                <TableColumn fx:id="colCorreoTitular" prefWidth="220.0" text="Correo titular"/>
+                                            </columns>
+                                        </TableView>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
+</VBox>

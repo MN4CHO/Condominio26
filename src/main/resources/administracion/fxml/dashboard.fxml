@@ -75,12 +75,10 @@
                            <children>
                                <Button mnemonicParsing="false" onAction="#irARegistrarDeuda"
                                        styleClass="submenu-item" text="Registrar Deuda"/>
-                               <Button mnemonicParsing="false" onAction="#irADefinirValorMensualAlicuta"
-                                       styleClass="submenu-item" text="Definir Valor Alícuota"/>
+                               <Button mnemonicParsing="false" onAction="#irAConfiguracionFinanciera"
+                                       styleClass="submenu-item" text="Configuración Financiera"/>
                                <Button mnemonicParsing="false" onAction="#irAGenerarReportePagosInternos"
                                        styleClass="submenu-item" text="Generar Reporte Pagos Internos"/>
-                               <Button mnemonicParsing="false" onAction="#irARegistrarEntidadBancaria"
-                                       styleClass="submenu-item" text="Registrar Entidad Bancaria"/>
                                <Button mnemonicParsing="false" onAction="#irARegistrarPagoExterno"
                                        styleClass="submenu-item" text="Registrar Pago Externo"/>
                                <Button mnemonicParsing="false" onAction="#irAGenerarReporteGastos"

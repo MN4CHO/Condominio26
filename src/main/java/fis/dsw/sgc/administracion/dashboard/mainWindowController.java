@@ -143,7 +143,7 @@ public class mainWindowController {
     @FXML void irAGenerarRendicionCuentas(ActionEvent event) { cargarVista("/finanzas/fxml/generarRendicionCuentas.fxml"); }
     @FXML void irAConsultarDeudas(ActionEvent event)         { cargarVista("/finanzas/fxml/consultarDeudas.fxml");         }
     @FXML void irARegistrarDeuda(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
-    @FXML void irADefinirValorMensualAlicuta(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
+    @FXML void irAConfiguracionFinanciera(ActionEvent event) { cargarVista("/finanzas/fxml/configuracionFinanciera.fxml"); }
     @FXML void irAGenerarReportePagosInternos(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
     @FXML void irARegistrarPagoExterno(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
     @FXML void irAGenerarReporteGastos(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
@@ -151,7 +151,6 @@ public class mainWindowController {
     @FXML void irAGenerarCertificadoNoDeudor(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
     @FXML void irAConsultarPagos(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
     @FXML void irAConsultarReporteRendicionCuentas(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
-    @FXML void irARegistrarEntidadBancaria(ActionEvent event)         { cargarVista("/finanzas/fxml/pendiente.fxml");         }
 
 
     // ==================== Submenú Reservas ====================
