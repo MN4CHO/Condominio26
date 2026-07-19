@@ -159,7 +159,7 @@ INSERT OR IGNORE INTO reserva
 (id_reserva, id_usuario, id_espacio_comun, fecha_creacion, fecha_reserva,
  hora_inicio, hora_fin, costo_aplicado_centavos, estado)
 VALUES
-(1, 2, 1, '2026-07-15 09:00:00', '2026-07-25', '18:00', '22:00', 5000, 'ACTIVA'),
+(1, 2, 1, '2026-07-15 09:00:00', '2026-07-25', '18:00', '21:00', 5000, 'ACTIVA'),
 (2, 6, 3, '2026-07-05 10:00:00', '2026-07-12', '12:00', '16:00', 2500, 'FINALIZADA'),
 (3, 7, 2, '2026-07-01 08:00:00', '2026-07-08', '10:00', '12:00', 0, 'CANCELADA'),
 (4, 3, 4, '2026-07-16 15:00:00', '2026-07-27', '09:00', '11:00', 0, 'ACTIVA');
@@ -266,51 +266,42 @@ VALUES
 -- GRE - VISITAS Y CHECK-IN
 -- ============================================================
 
-INSERT OR IGNORE INTO visita_programada
-(id_visita, id_residente_autoriza, id_inmueble, nombres_visita,
- apellidos_visita, cedula_visita, telefono_visita, correo_visita,
- fecha_programada, hora_programada, motivo, placa_vehiculo,
- requiere_parqueadero, estado, fecha_creacion)
+INSERT OR IGNORE INTO visitas_programadas
+(id_visita, id_residente, nombres_visita, apellidos_visita, cedula_visita,
+ telefono_visita, fecha_programada, hora_programada, placa_vehiculo, estado, motivo_visita)
 VALUES
-(1, 2, 1, 'Pedro', 'Mendoza', '1720000001', '0982000001',
- 'pedro@example.com', '2026-07-20', '16:00', 'Visita familiar',
- 'PBA-1234', 1, 'PROGRAMADA', '2026-07-18 09:00:00'),
-(2, 6, 2, 'Ana', 'Torres', '1720000002', '0982000002',
- 'ana@example.com', '2026-07-16', '10:00', 'Entrega de documentos',
- NULL, 0, 'FINALIZADA', '2026-07-15 14:00:00'),
-(3, 7, 3, 'Miguel', 'Paredes', '1720000003', '0982000003',
- NULL, '2026-07-22', '18:30', 'Visita personal',
- 'PCD-5678', 1, 'CANCELADA', '2026-07-17 11:00:00');
+(1, 7, 'María Fernanda', 'Paredes López', '1723456789', '0998456123', '2026-07-22', '10:30:00', 'PCD-4821', 'PROGRAMADA', 'Reunión familiar'),
+(2, 2, 'Carlos Andrés', 'Mendoza Ruiz', '0918765432', '0987123456', '2026-07-22', '15:00:00', 'PBC-2145', 'PROGRAMADA', 'Entrega de documentos'),
+(3, 3, 'Daniela Sofía', 'Villacrés Mora', '1109876543', '0968453210', '2026-07-20', '09:15:00', 'N/A', 'REALIZADA', 'Visita personal'),
+(4, 6, 'Jorge Luis', 'Salazar Ortiz', '1712345678', '0976321458', '2026-07-19', '18:45:00', 'PBL-7710', 'CANCELADA', 'Cena familiar'),
+(5, 5, 'Valentina', 'Guerrero Hidalgo', '0923145678', '0957412369', '2026-07-23', '14:00:00', 'PSO-9934', 'PROGRAMADA', 'Celebración de cumpleaños');
 
 INSERT OR IGNORE INTO registro_entrada
-(id_registro_entrada, id_visita, id_registrado_por, nombres, apellidos,
- cedula, fecha_llegada, hora_llegada, fecha_salida, hora_salida,
- tipo_entrada, informacion_adicional, observaciones, estado)
+(id_entrada, id_visita, nombres, apellidos, cedula, fecha_llegada, hora_llegada,
+ informacion_adicional, observaciones, tipo_entrada, placa_vehiculo)
 VALUES
-(1, 2, 4, 'Ana', 'Torres', '1720000002',
- '2026-07-16', '10:05', '2026-07-16', '10:45',
- 'VISITANTE', '{"motivo":"Entrega de documentos"}',
- 'Ingreso autorizado por residente', 'SALIO'),
-(2, NULL, 4, 'Carlos', 'Residente', '1710000002',
- '2026-07-18', '07:30', NULL, NULL,
- 'RESIDENTE', '{"inmueble":"TA-101"}',
- 'Ingreso habitual', 'INGRESADO'),
-(3, NULL, 4, 'Técnico', 'Internet', NULL,
- '2026-07-18', '09:15', '2026-07-18', '11:00',
- 'EXTERNA', '{"empresa":"Proveedor de internet"}',
- 'Mantenimiento de red', 'SALIO');
+(1, 3, 'Daniela Sofía', 'Villacrés Mora', '1109876543', '2026-07-20', '09:12:00',
+ 'Visita previamente autorizada.', 'Ingreso sin novedades.', 'VISITANTE', NULL),
+(2, NULL, 'Luis Fernando', 'Carrión Vega', '1719988776', '2026-07-20', '07:40:00',
+ 'Residente del condominio.', 'Acceso mediante tarjeta RFID.', 'RESIDENTE', 'PBC-5562'),
+(3, NULL, 'Pedro Javier', 'Guamán Chicaiza', '1722233344', '2026-07-20', '11:05:00',
+ 'Técnico de internet contratado.', 'Se verificó orden de trabajo.', 'EXTERNA', 'TMA-8820'),
+(4, 2, 'Carlos Andrés', 'Mendoza Ruiz', '0918765432', '2026-07-22', '14:57:00',
+ 'Entrega de documentación solicitada.', 'Esperó dos minutos en garita.', 'VISITANTE', 'PBC-2145'),
+(5, NULL, 'Andrea Belén', 'Benítez Torres', '0921456789', '2026-07-20', '17:35:00',
+ 'Residente ingresando con acompañante.', 'Sin novedades.', 'RESIDENTE', 'PDD-1098');
 
 INSERT OR IGNORE INTO vehiculo_visita
 (id_vehiculo_visita, id_visita, placa, marca, modelo, color)
 VALUES
-(1, 1, 'PBA-1234', 'Kia', 'Rio', 'Gris'),
-(2, 3, 'PCD-5678', 'Chevrolet', 'Sail', 'Azul');
+(1, 1, 'PCD-4821', 'Kia', 'Rio', 'Gris'),
+(2, 2, 'PBC-2145', 'Chevrolet', 'Sail', 'Azul');
 
 INSERT OR IGNORE INTO ingreso_parqueadero
 (id_ingreso_parqueadero, id_registro_entrada, id_parqueadero,
  fecha_hora_ingreso, fecha_hora_salida, estado)
 VALUES
-(1, 1, 2, '2026-07-16 10:05:00', '2026-07-16 10:45:00', 'LIBERADO');
+(1, 1, 2, '2026-07-20 09:12:00', '2026-07-20 10:45:00', 'LIBERADO');
 
 INSERT OR IGNORE INTO alerta_seguridad
 (id_alerta, id_registro_entrada, id_usuario_reporta, tipo,
@@ -318,7 +309,7 @@ INSERT OR IGNORE INTO alerta_seguridad
 VALUES
 (1, 3, 4, 'VERIFICACION',
  'Se verificó identidad del técnico externo antes del ingreso',
- 'BAJA', '2026-07-18 09:20:00', 'CERRADA');
+ 'BAJA', '2026-07-20 11:10:00', 'CERRADA');
 
 -- ============================================================
 -- GRF - COMUNICACIONES Y NOTIFICACIONES
@@ -410,7 +401,7 @@ SELECT 'deudas', COUNT(*) FROM deuda
 UNION ALL
 SELECT 'pagos', COUNT(*) FROM pago
 UNION ALL
-SELECT 'visitas_programadas', COUNT(*) FROM visita_programada
+SELECT 'visitas_programadas', COUNT(*) FROM visitas_programadas
 UNION ALL
 SELECT 'registros_entrada', COUNT(*) FROM registro_entrada
 UNION ALL

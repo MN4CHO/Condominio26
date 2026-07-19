@@ -413,45 +413,45 @@ CREATE TABLE IF NOT EXISTS gasto (
 -- GRE - VISITAS, CHECK-IN Y SEGURIDAD
 -- ============================================================
 
-CREATE TABLE IF NOT EXISTS visita_programada (
-    id_visita               INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_residente_autoriza   INTEGER NOT NULL,
-    id_inmueble             INTEGER NOT NULL,
-    nombres_visita          TEXT NOT NULL,
-    apellidos_visita        TEXT NOT NULL,
-    cedula_visita           TEXT,
-    telefono_visita         TEXT,
-    correo_visita           TEXT,
-    fecha_programada        TEXT NOT NULL,
-    hora_programada         TEXT NOT NULL,
-    motivo                  TEXT,
-    placa_vehiculo          TEXT,
-    requiere_parqueadero    INTEGER NOT NULL DEFAULT 0 CHECK (requiere_parqueadero IN (0, 1)),
-    estado                  TEXT NOT NULL DEFAULT 'PROGRAMADA'
-                            CHECK (estado IN ('PROGRAMADA','EN_CURSO','FINALIZADA','CANCELADA')),
-    fecha_creacion          TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_residente_autoriza) REFERENCES usuario(id_usuario) ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY (id_inmueble) REFERENCES inmueble(id_inmueble) ON UPDATE CASCADE ON DELETE RESTRICT
+CREATE TABLE IF NOT EXISTS visitas_programadas (
+   id_visita INTEGER PRIMARY KEY AUTOINCREMENT,
+   id_residente INTEGER NOT NULL,
+   -- Datos del visitante "aplanados" en la visita
+   nombres_visita TEXT NOT NULL,
+   apellidos_visita TEXT NOT NULL,
+   cedula_visita TEXT NOT NULL,
+   telefono_visita TEXT NOT NULL,
+   -- Datos propios de la planificación
+   fecha_programada TEXT NOT NULL, -- Formato: 'YYYY-MM-DD'
+   hora_programada TEXT NOT NULL, -- Formato: 'HH:MM:SS'
+   placa_vehiculo TEXT NOT NULL DEFAULT 'N/A',
+   estado TEXT NOT NULL DEFAULT 'PROGRAMADA',
+   motivo_visita TEXT NOT NULL,
+   
+   -- Restricciones para simular los Enums del diagrama
+   CONSTRAINT chk_estado_visita CHECK (estado IN ('PROGRAMADA', 'REALIZADA', 'CANCELADA'))
 );
 
 CREATE TABLE IF NOT EXISTS registro_entrada (
-    id_registro_entrada     INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_visita               INTEGER,
-    id_registrado_por       INTEGER NOT NULL,
-    nombres                 TEXT NOT NULL,
-    apellidos               TEXT,
-    cedula                  TEXT,
-    fecha_llegada           TEXT NOT NULL DEFAULT CURRENT_DATE,
-    hora_llegada            TEXT NOT NULL DEFAULT CURRENT_TIME,
-    fecha_salida            TEXT,
-    hora_salida             TEXT,
-    tipo_entrada            TEXT NOT NULL CHECK (tipo_entrada IN ('VISITANTE','RESIDENTE','EXTERNA')),
-    informacion_adicional   TEXT,
-    observaciones           TEXT,
-    estado                  TEXT NOT NULL DEFAULT 'INGRESADO'
-                            CHECK (estado IN ('INGRESADO','SALIO','RECHAZADO')),
-    FOREIGN KEY (id_visita) REFERENCES visita_programada(id_visita) ON UPDATE CASCADE ON DELETE SET NULL,
-    FOREIGN KEY (id_registrado_por) REFERENCES usuario(id_usuario) ON UPDATE CASCADE ON DELETE RESTRICT
+   id_entrada INTEGER PRIMARY KEY AUTOINCREMENT,
+   -- Relación opcional con la visita programada
+   id_visita INTEGER NULL,
+   -- Datos de la persona que ingresa (sea residente, visitante o externo)
+   nombres TEXT NOT NULL,
+   apellidos TEXT NOT NULL,
+   cedula TEXT NOT NULL,
+   -- Atributos generales del Check-In
+   fecha_llegada TEXT NOT NULL, -- Formato: 'YYYY-MM-DD'
+   hora_llegada TEXT NOT NULL,  -- Formato: 'HH:MM:SS'
+   informacion_adicional TEXT,  -- informacion importante sobre la visita
+   observaciones TEXT,          -- incidencias, novedades sobre la visita
+   tipo_entrada TEXT NOT NULL,
+   placa_vehiculo TEXT,
+   
+   -- Llave foránea hacia visitas programadas
+   FOREIGN KEY (id_visita) REFERENCES visitas_programadas(id_visita) ON DELETE SET NULL,
+   -- Restricciones de integridad y formatos
+   CONSTRAINT chk_tipo_entrada CHECK (tipo_entrada IN ('RESIDENTE', 'VISITANTE', 'EXTERNA'))
 );
 
 CREATE TABLE IF NOT EXISTS vehiculo_visita (
@@ -461,7 +461,7 @@ CREATE TABLE IF NOT EXISTS vehiculo_visita (
     marca                   TEXT,
     modelo                  TEXT,
     color                   TEXT,
-    FOREIGN KEY (id_visita) REFERENCES visita_programada(id_visita) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (id_visita) REFERENCES visitas_programadas(id_visita) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ingreso_parqueadero (
@@ -472,7 +472,7 @@ CREATE TABLE IF NOT EXISTS ingreso_parqueadero (
     fecha_hora_salida       TEXT,
     estado                  TEXT NOT NULL DEFAULT 'OCUPADO'
                             CHECK (estado IN ('OCUPADO','LIBERADO','CANCELADO')),
-    FOREIGN KEY (id_registro_entrada) REFERENCES registro_entrada(id_registro_entrada) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (id_registro_entrada) REFERENCES registro_entrada(id_entrada) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (id_parqueadero) REFERENCES parqueadero(id_parqueadero) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
@@ -486,7 +486,7 @@ CREATE TABLE IF NOT EXISTS alerta_seguridad (
     fecha_creacion          TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     estado                  TEXT NOT NULL DEFAULT 'ABIERTA'
                             CHECK (estado IN ('ABIERTA','EN_ATENCION','RESUELTA','CERRADA')),
-    FOREIGN KEY (id_registro_entrada) REFERENCES registro_entrada(id_registro_entrada) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (id_registro_entrada) REFERENCES registro_entrada(id_entrada) ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY (id_usuario_reporta) REFERENCES usuario(id_usuario) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
@@ -566,8 +566,8 @@ CREATE INDEX IF NOT EXISTS idx_deuda_usuario ON deuda(id_usuario);
 CREATE INDEX IF NOT EXISTS idx_deuda_estado ON deuda(estado);
 CREATE INDEX IF NOT EXISTS idx_deuda_vencimiento ON deuda(fecha_vencimiento);
 CREATE INDEX IF NOT EXISTS idx_pago_deuda ON pago(id_deuda);
-CREATE INDEX IF NOT EXISTS idx_visita_residente ON visita_programada(id_residente_autoriza);
-CREATE INDEX IF NOT EXISTS idx_visita_fecha ON visita_programada(fecha_programada);
+CREATE INDEX IF NOT EXISTS idx_visita_residente ON visitas_programadas(id_residente);
+CREATE INDEX IF NOT EXISTS idx_visita_fecha ON visitas_programadas(fecha_programada);
 CREATE INDEX IF NOT EXISTS idx_registro_entrada_visita ON registro_entrada(id_visita);
 CREATE INDEX IF NOT EXISTS idx_registro_entrada_fecha ON registro_entrada(fecha_llegada);
 CREATE INDEX IF NOT EXISTS idx_mensaje_emisor ON mensaje(id_emisor);
