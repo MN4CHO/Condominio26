@@ -120,23 +120,30 @@ public class RegistrarPagoExternoController implements Initializable {
 
         cmbMotivo.valueProperty().addListener((obs, old, nuevo) -> {
             if (Objects.equals(nuevo, "SERVICIO BÁSICO")) {
-                cmpDescripcion.setEditable(false);
+                cmpDescripcion.setDisable(true);
                 opcionesServicioBasico.setVisible(true);
                 opcionesServicioBasico.setManaged(true);
                 lblIconoTipoGasto.setText(null);
                 lblIconoTipoGasto.setGraphic(icon7);
+                cmpDescripcion.setText(null);
 
             }
 
             if (Objects.equals(nuevo, "SUELDOS")) {
+                cmpDescripcion.setDisable(false);
                 lblIconoTipoGasto.setText(null);
                 lblIconoTipoGasto.setGraphic(icon6);
+                opcionesServicioBasico.setVisible(false);
+                opcionesServicioBasico.setManaged(false);
 
             }
 
             if(Objects.equals(nuevo, "OTROS")){
+                cmpDescripcion.setDisable(false);
                 lblIconoTipoGasto.setText(null);
                 lblIconoTipoGasto.setGraphic(icon8);
+                opcionesServicioBasico.setVisible(false);
+                opcionesServicioBasico.setManaged(false);
             }
         });
 
