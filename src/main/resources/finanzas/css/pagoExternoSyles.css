@@ -9,16 +9,16 @@
 }
 
 .titleIcon{
-    -fx-icon-size: 32;
+    -fx-icon-size: 38;
     -fx-icon-color: black;
 }
 
 .formIcon{
-    -fx-icon-size: 25;
+    -fx-icon-size: 32;
     -fx-icon-color: #af1111;
 }
 
 .playableIcon{
-    -fx-icon-size: 45;
+    -fx-icon-size: 55;
     -fx-icon-color: #6e620c;
 }

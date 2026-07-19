@@ -82,7 +82,7 @@
                                <Insets right="18.0" />
                            </padding>
                        </Label>
-                       <TextField fx:id="txtTotalMultas" editable="false" prefHeight="26.0" prefWidth="169.0" styleClass="text-field" />
+                       <TextField fx:id="txtTotalReservas" editable="false" prefHeight="26.0" prefWidth="169.0" styleClass="text-field" />
                        <Label fx:id="lblIconoTotalReservas" text="Label" />
                    </children>
                </HBox>
