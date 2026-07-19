@@ -51,19 +51,15 @@
             <artifactId>ikonli-fontawesome-pack</artifactId>
             <version>12.3.1</version>
         </dependency>
-
-        <!-- PostgreSQL JDBC driver: traído del pom anterior (PMSEYJ).
-             Descomenta/ajusta si condominio26 también usa Postgres;
-             si usan otro motor (MySQL, etc.) cambia esta dependencia. -->
-        <!--
+        <!-- DEPENDENCIA DE SQLITE-->
+        <!-- Source: https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.7</version>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.53.2.0</version>
+            <scope>compile</scope>
         </dependency>
-        -->
     </dependencies>
-
     <build>
         <!-- No se define <sourceDirectory>/<resources> a propósito:
              al omitirlos, Maven usa la convención estándar
