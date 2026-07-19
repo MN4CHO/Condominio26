@@ -21,14 +21,18 @@ import java.util.regex.Pattern;
 public class SolicitarPagoEnCuotasController {
 
     private static final Pattern MESES_VALIDO = Pattern.compile("\\d+");
+    private static final Pattern CEDULA_VALIDA = Pattern.compile("\\d{10}");
     private static final int MESES_MINIMOS = 3;
     private static final DateTimeFormatter FMT = DateTimeFormatter.ISO_LOCAL_DATE;
 
     // Simulación mientras no exista el Service/DAO de deudas
     private static final double VALOR_DEUDA_SIMULADA = 90.00;
-    private static final String ID_DEUDA_CON_PENDIENTES = "DEU-PENDIENTES";
+    private static final String CEDULA_CON_DEUDAS_EN_MORA = "1111111111";
+    private static final String CEDULA_CON_DEUDAS_PENDIENTES = "2222222222";
     private static final String ID_DEUDA_INEXISTENTE = "DEU-404";
 
+    @FXML private TextField txtCedula;
+    @FXML private Button btnConsultarDeudas;
     @FXML private TextField txtIdDeuda;
     @FXML private TextField txtNumeroMeses;
     @FXML private Button btnCalcular;
@@ -41,15 +45,8 @@ public class SolicitarPagoEnCuotasController {
     @FXML private TableColumn<CuotaFila, String> colFechaMax;
     @FXML private TableColumn<CuotaFila, String> colValor;
 
-    @FXML private TableView<DeudaPendienteFila> tablaDeudasPendientes;
-    @FXML private TableColumn<DeudaPendienteFila, String> colPendienteMotivo;
-    @FXML private TableColumn<DeudaPendienteFila, String> colPendienteValor;
-    @FXML private TableColumn<DeudaPendienteFila, String> colPendienteEstado;
-
     private final ObservableList<CuotaFila> cuotas = FXCollections.observableArrayList();
-    private final ObservableList<DeudaPendienteFila> deudasPendientes = FXCollections.observableArrayList();
     private Label placeholderTabla;
-    private Label placeholderPendientes;
 
     @FXML
     public void initialize() {
@@ -66,27 +63,49 @@ public class SolicitarPagoEnCuotasController {
         placeholderTabla.setMaxWidth(420);
         tablaCuotas.setPlaceholder(placeholderTabla);
 
-        colPendienteMotivo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMotivo()));
-        colPendienteValor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getValor()));
-        colPendienteEstado.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEstado()));
-        tablaDeudasPendientes.setItems(deudasPendientes);
-        tablaDeudasPendientes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-
-        placeholderPendientes = new Label("Ingrese el ID de la deuda y calcule el diferimiento para consultar las deudas pendientes.");
-        placeholderPendientes.getStyleClass().add("module-subtitle");
-        placeholderPendientes.setWrapText(true);
-        placeholderPendientes.setAlignment(Pos.CENTER);
-        placeholderPendientes.setMaxWidth(420);
-        tablaDeudasPendientes.setPlaceholder(placeholderPendientes);
-
         btnSolicitar.setDisable(true);
-        setMensaje("Ingrese el ID de la deuda y el número de meses a los que desea diferirla.", "message-info");
+        bloquearDatosDeuda();
+        setMensaje("Ingrese su número de cédula y pulse \"Consultar deudas\".", "message-info");
+    }
+
+    @FXML
+    void consultarDeudas(ActionEvent event) {
+        cuotas.clear();
+        btnSolicitar.setDisable(true);
+        bloquearDatosDeuda();
+        String cedula = texto(txtCedula);
+
+        if (cedula.isEmpty()) {
+            setMensaje("Debe ingresar el número de cédula del residente.", "message-error");
+            return;
+        }
+        if (!CEDULA_VALIDA.matcher(cedula).matches()) {
+            setMensaje("Cédula inválida. Ingrese 10 dígitos.", "message-error");
+            return;
+        }
+
+        // Caso de uso compartido consultarDeuda: el Sistema consulta las deudas del residente
+        // TODO: reemplazar por servicioFinanzas.consultarDeudasPendientes(residente) cuando exista el Service/DAO
+        // Solo las deudas en estado MORA bloquean el diferimiento (escenario alternativo 2)
+        if (cedula.equals(CEDULA_CON_DEUDAS_EN_MORA)) {
+            setMensaje("Tiene deudas pendientes de pago, no puede ser beneficiario para diferir una deuda hasta que pague todos sus valores",
+                    "message-error");
+            return;
+        }
+
+        desbloquearDatosDeuda();
+        if (cedula.equals(CEDULA_CON_DEUDAS_PENDIENTES)) {
+            setMensaje("El residente tiene deudas pendientes, pero ninguna en mora. Ingrese el ID de la deuda y el número de meses a diferirla.",
+                    "message-success");
+        } else {
+            setMensaje("El residente no tiene deudas pendientes. Ingrese el ID de la deuda y el número de meses a diferirla.",
+                    "message-success");
+        }
     }
 
     @FXML
     void calcular(ActionEvent event) {
         cuotas.clear();
-        deudasPendientes.clear();
         btnSolicitar.setDisable(true);
         String idDeuda = texto(txtIdDeuda);
         String meses = texto(txtNumeroMeses);
@@ -110,20 +129,6 @@ public class SolicitarPagoEnCuotasController {
             return;
         }
 
-        // Caso de uso compartido consultarDeuda: el Sistema consulta las deudas pendientes del residente
-        // TODO: reemplazar por servicioFinanzas.consultarDeudasPendientes(residente) cuando exista el Service/DAO
-        if (idDeuda.equalsIgnoreCase(ID_DEUDA_CON_PENDIENTES)) {
-            deudasPendientes.addAll(
-                    new DeudaPendienteFila("MULTA", "$20.00", "MORA"),
-                    new DeudaPendienteFila("RESERVA", "$15.00", "PENDIENTE")
-            );
-            setMensaje("Tiene deudas pendientes de pago, no puede ser beneficiario para diferir una deuda hasta que pague todos sus valores",
-                    "message-error");
-            return;
-        }
-
-        placeholderPendientes.setText("El residente no tiene deudas pendientes.");
-
         double valorCuota = VALOR_DEUDA_SIMULADA / numeroMeses;
         LocalDate hoy = LocalDate.now();
         for (int i = 1; i <= numeroMeses; i++) {
@@ -145,13 +150,27 @@ public class SolicitarPagoEnCuotasController {
 
     @FXML
     void limpiar(ActionEvent event) {
+        txtCedula.clear();
         txtIdDeuda.clear();
         txtNumeroMeses.clear();
         cuotas.clear();
-        deudasPendientes.clear();
-        placeholderPendientes.setText("Ingrese el ID de la deuda y calcule el diferimiento para consultar las deudas pendientes.");
+        bloquearDatosDeuda();
         btnSolicitar.setDisable(true);
-        setMensaje("Ingrese el ID de la deuda y el número de meses a los que desea diferirla.", "message-info");
+        setMensaje("Ingrese su número de cédula y pulse \"Consultar deudas\".", "message-info");
+    }
+
+    private void bloquearDatosDeuda() {
+        txtIdDeuda.clear();
+        txtNumeroMeses.clear();
+        txtIdDeuda.setDisable(true);
+        txtNumeroMeses.setDisable(true);
+        btnCalcular.setDisable(true);
+    }
+
+    private void desbloquearDatosDeuda() {
+        txtIdDeuda.setDisable(false);
+        txtNumeroMeses.setDisable(false);
+        btnCalcular.setDisable(false);
     }
 
     private String texto(TextField campo) {
@@ -189,31 +208,6 @@ public class SolicitarPagoEnCuotasController {
 
         public String getValor() {
             return valor;
-        }
-    }
-
-    // Fila de la tabla de deudas pendientes (caso de uso compartido consultarDeuda)
-    public static class DeudaPendienteFila {
-        private final String motivo;
-        private final String valor;
-        private final String estado;
-
-        public DeudaPendienteFila(String motivo, String valor, String estado) {
-            this.motivo = motivo;
-            this.valor = valor;
-            this.estado = estado;
-        }
-
-        public String getMotivo() {
-            return motivo;
-        }
-
-        public String getValor() {
-            return valor;
-        }
-
-        public String getEstado() {
-            return estado;
         }
     }
 }
