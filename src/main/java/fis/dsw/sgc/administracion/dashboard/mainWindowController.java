@@ -193,4 +193,41 @@ public class mainWindowController {
         Parent root = FXMLLoader.load(getClass().getResource(vista));
         NavigationUtil.changeScene(event, root);
     }
+
+    // ==================== Administración (GRB) ====================
+
+    @FXML
+    void irARegistrarCuenta(ActionEvent event) {
+        cargarVista("/administracion/fxml/registrarCuenta.fxml");
+    }
+
+    @FXML
+    void irAActualizarPerfil(ActionEvent event) {
+        cargarVista("/administracion/fxml/actualizarPerfil.fxml");
+    }
+
+    @FXML
+    void irAActualizarInformacionCuenta(ActionEvent event) {
+        cargarVista("/administracion/fxml/actualizarInformacionDeCuenta.fxml");
+    }
+
+    @FXML
+    void irADesactivarCuenta(ActionEvent event) {
+        cargarVista("/administracion/fxml/desactivarCuenta.fxml");
+    }
+
+    @FXML
+    void irAAsignarRol(ActionEvent event) {
+        cargarVista("/administracion/fxml/asignarRol.fxml");
+    }
+
+    @FXML
+    void irADefinirPermisos(ActionEvent event) {
+        cargarVista("/administracion/fxml/definirPermisos.fxml");
+    }
+
+    @FXML
+    void irARecuperarContrasena(ActionEvent event) {
+        cargarVista("/administracion/fxml/recuperarContrasena.fxml");
+    }
 }

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:controller="fis.dsw.sgc.administracion.controller.DesactivarCuentaController"
+      alignment="TOP_CENTER"
+      maxHeight="1.7976931348623157E308"
+      maxWidth="1.7976931348623157E308"
+      prefHeight="600.0"
+      prefWidth="900.0"
+      spacing="16.0"
+      styleClass="module-content"
+      stylesheets="@../css/administracionStyles.css"
+      xmlns="http://javafx.com/javafx/26"
+      xmlns:fx="http://javafx.com/fxml/1">
+
+    <padding>
+        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
+    </padding>
+
+    <children>
+        <Label styleClass="module-title" text="Cambiar Estado de Cuenta"/>
+        <Label styleClass="module-subtitle"
+               text="Busque una cuenta por correo electrónico para desactivar o reactivar su acceso al sistema."/>
+
+        <!-- Panel de búsqueda + info de la cuenta -->
+        <VBox fx:id="panelPrincipal" maxWidth="640.0" spacing="14.0" styleClass="module-card">
+            <padding>
+                <Insets bottom="20.0" left="24.0" right="24.0" top="20.0"/>
+            </padding>
+            <children>
+                <Label styleClass="form-label" text="Correo de la cuenta"/>
+                <HBox spacing="10.0">
+                    <children>
+                        <TextField fx:id="txtBuscarCorreo" promptText="correo@condominio.local"
+                                   HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#buscarCuenta"
+                                styleClass="secondary-button" text="Buscar"/>
+                    </children>
+                </HBox>
+
+                <VBox fx:id="panelInfoCuenta" spacing="10.0" visible="false" managed="false">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                            <children>
+                                <Label fx:id="lblUsuarioEncontrado" styleClass="module-section-title" text=""/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="lblEstadoCuenta" styleClass="badge-estado" text=""/>
+                            </children>
+                        </HBox>
+                        <Button fx:id="btnAccionEstado" mnemonicParsing="false" onAction="#solicitarCambioEstado"
+                                styleClass="danger-button" text="Desactivar Cuenta"/>
+                    </children>
+                </VBox>
+
+                <Label fx:id="lblMensaje" styleClass="message-label" text="" wrapText="true"/>
+            </children>
+        </VBox>
+
+        <!-- Panel de confirmación -->
+        <VBox fx:id="panelConfirmacion" maxWidth="640.0" spacing="16.0" styleClass="module-card"
+              visible="false" managed="false">
+            <padding>
+                <Insets bottom="24.0" left="24.0" right="24.0" top="24.0"/>
+            </padding>
+            <children>
+                <Label styleClass="module-section-title" text="Confirmar acción"/>
+                <Label fx:id="lblResumenConfirmacion" styleClass="message-label" text="" wrapText="true"/>
+                <HBox alignment="CENTER_RIGHT" spacing="12.0">
+                    <children>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnCancelarConfirmacion" mnemonicParsing="false"
+                                onAction="#cancelarConfirmacion" styleClass="secondary-button" text="Cancelar"/>
+                        <Button fx:id="btnConfirmarAccion" mnemonicParsing="false"
+                                onAction="#confirmarCambioEstado" styleClass="danger-button"
+                                text="Sí, continuar"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</VBox>

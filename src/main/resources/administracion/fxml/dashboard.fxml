@@ -57,10 +57,20 @@
                                         </Button>
                                         <VBox fx:id="submenuAdministracion" managed="false" styleClass="submenu" visible="false">
                                             <children>
-                                                <Button mnemonicParsing="false" onAction="#opcionPendiente"
-                                                        styleClass="submenu-item" text="Opción 1"/>
-                                                <Button mnemonicParsing="false" onAction="#opcionPendiente"
-                                                        styleClass="submenu-item" text="Opción 2"/>
+                                                <Button mnemonicParsing="false" onAction="#irARegistrarCuenta"
+                                                        styleClass="submenu-item" text="Registrar Cuenta"/>
+                                                <Button mnemonicParsing="false" onAction="#irAActualizarPerfil"
+                                                        styleClass="submenu-item" text="Actualizar Perfil"/>
+                                                <Button mnemonicParsing="false" onAction="#irAActualizarInformacionCuenta"
+                                                        styleClass="submenu-item" text="Actualizar Info. de Cuenta"/>
+                                                <Button mnemonicParsing="false" onAction="#irADesactivarCuenta"
+                                                        styleClass="submenu-item" text="Desactivar Cuenta"/>
+                                                <Button mnemonicParsing="false" onAction="#irAAsignarRol"
+                                                        styleClass="submenu-item" text="Asignar Rol a Usuario"/>
+                                                <Button mnemonicParsing="false" onAction="#irADefinirPermisos"
+                                                        styleClass="submenu-item" text="Definir Permisos de Rol"/>
+                                                <Button mnemonicParsing="false" onAction="#irARecuperarContrasena"
+                                                        styleClass="submenu-item" text="Recuperar Contraseña"/>
                                             </children>
                                         </VBox>
                                     </children>
