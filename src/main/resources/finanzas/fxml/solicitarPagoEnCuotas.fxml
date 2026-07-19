@@ -56,15 +56,39 @@
                                 <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" prefWidth="400.0"/>
                             </columnConstraints>
                             <children>
+                                <Label styleClass="form-label" text="Número de cédula"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="txtCedula" promptText="Ej. 1102345678"
+                                           maxWidth="1.7976931348623157E308"
+                                           GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                            </children>
+                        </GridPane>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <Button fx:id="btnConsultarDeudas" mnemonicParsing="false"
+                                        onAction="#consultarDeudas" styleClass="secondary-button"
+                                        text="Consultar deudas"/>
+                            </children>
+                        </HBox>
+
+                        <GridPane hgap="12.0" vgap="14.0" maxWidth="1.7976931348623157E308">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="150.0" prefWidth="160.0"/>
+                                <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" prefWidth="400.0"/>
+                            </columnConstraints>
+                            <children>
                                 <Label styleClass="form-label" text="ID deuda a diferir"
                                        GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                                 <TextField fx:id="txtIdDeuda" promptText="Ej. DEU-001"
+                                           disable="true"
                                            maxWidth="1.7976931348623157E308"
                                            GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
                                 <Label styleClass="form-label" text="Número de meses"
                                        GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                                 <TextField fx:id="txtNumeroMeses" promptText="Mínimo 3 meses"
+                                           disable="true"
                                            maxWidth="1.7976931348623157E308"
                                            GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                             </children>
@@ -73,6 +97,7 @@
                         <HBox alignment="CENTER_LEFT" spacing="12.0">
                             <children>
                                 <Button fx:id="btnCalcular" mnemonicParsing="false"
+                                        disable="true"
                                         onAction="#calcular" styleClass="primary-button"
                                         text="Calcular diferimiento"/>
                                 <Button fx:id="btnLimpiar" mnemonicParsing="false"
@@ -82,30 +107,6 @@
                         </HBox>
 
                         <Label fx:id="lblMensaje" styleClass="message-label, message-info" text="" wrapText="true"/>
-                    </children>
-                </VBox>
-
-                <VBox maxHeight="1.7976931348623157E308"
-                      maxWidth="1.7976931348623157E308"
-                      spacing="8.0"
-                      styleClass="table-card">
-                    <padding>
-                        <Insets bottom="12.0" left="12.0" right="12.0" top="12.0"/>
-                    </padding>
-                    <children>
-                        <Label styleClass="module-section-title" text="Deudas pendientes del residente"/>
-                        <Label styleClass="module-subtitle" wrapText="true"
-                               text="El Sistema consulta las deudas pendientes del residente antes de aprobar el diferimiento (caso de uso consultarDeuda)."/>
-                        <TableView fx:id="tablaDeudasPendientes"
-                                   prefHeight="140.0"
-                                   maxWidth="1.7976931348623157E308"
-                                   tableMenuButtonVisible="false">
-                            <columns>
-                                <TableColumn fx:id="colPendienteMotivo" prefWidth="160.0" reorderable="false" text="Motivo"/>
-                                <TableColumn fx:id="colPendienteValor" prefWidth="140.0" reorderable="false" text="Valor"/>
-                                <TableColumn fx:id="colPendienteEstado" prefWidth="140.0" reorderable="false" text="Estado"/>
-                            </columns>
-                        </TableView>
                     </children>
                 </VBox>
 
