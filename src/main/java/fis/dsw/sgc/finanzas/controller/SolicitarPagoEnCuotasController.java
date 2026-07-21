@@ -1,6 +1,7 @@
 package fis.dsw.sgc.finanzas.controller;
 
 import fis.dsw.sgc.finanzas.dto.CuotaDTO;
+import fis.dsw.sgc.finanzas.service.DeudaServiceImpl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,10 +13,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import fis.dsw.sgc.finanzas.service.IDeudaService;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 // Controlador de la vista Solicitar pago en cuotas (caso de uso solicitarPagoEnCuotas, GRA)
@@ -24,11 +23,9 @@ public class SolicitarPagoEnCuotasController {
     private static final Pattern MESES_VALIDO = Pattern.compile("\\d+");
     private static final int MESES_MINIMOS = 3;
     private static final int MESES_MAXIMOS = 11;
-    private static final DateTimeFormatter FMT = DateTimeFormatter.ISO_LOCAL_DATE;
 
-    // Simulación mientras no exista el Service/DAO de deudas
-    private static final double VALOR_DEUDA_SIMULADA = 90.00;
-    private static final String ID_DEUDA_RESIDENTE_EN_MORA = "DEU-002";
+    // Conexión Controller -> Service: por aquí se accede a la lógica de negocio real (Service -> DAO)
+    private final IDeudaService deudaService = new DeudaServiceImpl();
 
     @FXML private TextField txtIdDeuda;
     @FXML private TextField txtNumeroMeses;
@@ -86,22 +83,18 @@ public class SolicitarPagoEnCuotasController {
             return;
         }
 
-        // TODO: reemplazar todo este bloque de simulación por:
-        // deudaService.solicitarPagoEnCuotas(Integer.valueOf(idDeuda), numeroMeses);
-        // (la validación de mora y el cálculo/generación de las cuotas los hace el Service, no el Controller)
-        if (idDeuda.equalsIgnoreCase(ID_DEUDA_RESIDENTE_EN_MORA)) {
-            setMensaje("No puede ser beneficiario a este beneficio porque tiene deudas en estado EN MORA", "message-error");
+        try {
+            // Llamado al Service: envía el id de la deuda y el número de meses, recibe de vuelta las cuotas generadas.
+            // La validación de mora y el cálculo de cuotas ocurren dentro del Service, no aquí.
+            cuotas.setAll(deudaService.solicitarPagoEnCuotas(Integer.valueOf(idDeuda), numeroMeses));
+        } catch (NumberFormatException e) {
+            // El Service espera un id numérico; si el texto ingresado no lo es, se avisa al usuario
+            setMensaje("El ID de la deuda ingresado no es válido, ingrese un número entero.", "message-error");
             return;
-        }
-
-        double valorCuota = VALOR_DEUDA_SIMULADA / numeroMeses;
-        LocalDate hoy = LocalDate.now();
-        for (int i = 1; i <= numeroMeses; i++) {
-            cuotas.add(new CuotaDTO(
-                    "Cuota " + i + "/" + numeroMeses,
-                    hoy.plusMonths(i).format(FMT),
-                    String.format(Locale.US, "$%.2f", valorCuota)
-            ));
+        } catch (IllegalStateException e) {
+            // El Service lanza esta excepción cuando detecta que la deuda está en estado EN MORA
+            setMensaje(e.getMessage(), "message-error");
+            return;
         }
 
         btnSolicitar.setDisable(false);
