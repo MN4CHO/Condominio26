@@ -28,7 +28,7 @@ public class Reserva {
     private String horaInicio;          // hora_inicio    ("HH:MM[:SS]")
     private String horaFin;             // hora_fin
     private int costoAplicadoCentavos;  // costo_aplicado_centavos
-    // private EstadoReserva estado;       // estado (texto en BD)
+    private EstadoReserva estado;       // estado (texto en BD)
     private String motivoCancelacion;   // motivo_cancelacion
     private String fechaCancelacion;    // fecha_cancelacion
 
@@ -46,9 +46,9 @@ public class Reserva {
     // Comportamiento (segun el diagrama de clases)
     // ==================================================================
 
-    // public void cambiarEstado(EstadoReserva nuevoEstado) {
-    //     this.estado = nuevoEstado;
-    // }
+    public void cambiarEstado(EstadoReserva nuevoEstado) {
+        this.estado = nuevoEstado;
+    }
 
     /** Materializa la composicion: la observacion pasa a pertenecer a esta reserva. */
     public void agregarObservacion(Observacion obs) {
@@ -93,7 +93,7 @@ public class Reserva {
         r.horaInicio = dto.getHoraInicio();
         r.horaFin = dto.getHoraFin();
         r.costoAplicadoCentavos = dto.getCostoAplicadoCentavos();
-        // r.estado = parseEstado(dto.getEstado());
+        r.estado = parseEstado(dto.getEstado());
         r.motivoCancelacion = dto.getMotivoCancelacion();
         r.fechaCancelacion = dto.getFechaCancelacion();
         r.nombreResidente = dto.getNombreResidente();
@@ -111,7 +111,7 @@ public class Reserva {
         dto.setHoraInicio(horaInicio);
         dto.setHoraFin(horaFin);
         dto.setCostoAplicadoCentavos(costoAplicadoCentavos);
-        // dto.setEstado(estado != null ? estado.name() : null);
+        dto.setEstado(estado != null ? estado.name() : null);
         dto.setMotivoCancelacion(motivoCancelacion);
         dto.setFechaCancelacion(fechaCancelacion);
         dto.setNombreResidente(nombreResidente);
@@ -128,18 +128,20 @@ public class Reserva {
         return lista;
     }
 
-    // /** Tolera el valor 'ACTIVA' que hoy usan las SQL del DAO (ver nota). */
-    // private static EstadoReserva parseEstado(String estado) {
-    //     if (estado == null) return null;
-    //     switch (estado.trim().toUpperCase()) {
-    //         case "ACTIVA":     // valor actual en las SQL del DAO
-    //         case "CONFIRMADA": return EstadoReserva.CONFIRMADA;
-    //         case "PENDIENTE":  return EstadoReserva.PENDIENTE;
-    //         case "CANCELADA":  return EstadoReserva.CANCELADA;
-    //         case "FINALIZADA": return EstadoReserva.FINALIZADA;
-    //         default:           return EstadoReserva.PENDIENTE;
-    //     }
-    // }
+    /**
+     * Convierte el texto de estado de la BD al enum.
+     * La BD usa el CHECK ('ACTIVA','CANCELADA','FINALIZADA'), que coincide
+     * con EstadoReserva. Ante un valor desconocido se asume ACTIVA.
+     */
+    private static EstadoReserva parseEstado(String estado) {
+        if (estado == null) return null;
+        switch (estado.trim().toUpperCase()) {
+            case "CANCELADA":  return EstadoReserva.CANCELADA;
+            case "FINALIZADA": return EstadoReserva.FINALIZADA;
+            case "ACTIVA":
+            default:           return EstadoReserva.ACTIVA;
+        }
+    }
 
     // ==================================================================
     // getters / setters
@@ -169,8 +171,8 @@ public class Reserva {
     public int getCostoAplicadoCentavos() { return costoAplicadoCentavos; }
     public void setCostoAplicadoCentavos(int c) { this.costoAplicadoCentavos = c; }
 
-    // public EstadoReserva getEstado() { return estado; }
-    // public void setEstado(EstadoReserva estado) { this.estado = estado; }
+    public EstadoReserva getEstado() { return estado; }
+    public void setEstado(EstadoReserva estado) { this.estado = estado; }
 
     public String getMotivoCancelacion() { return motivoCancelacion; }
     public void setMotivoCancelacion(String m) { this.motivoCancelacion = m; }
@@ -188,4 +190,5 @@ public class Reserva {
 
     public String getNombreEspacio() { return nombreEspacio; }
     public void setNombreEspacio(String n) { this.nombreEspacio = n; }
+    
 }
