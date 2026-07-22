@@ -223,6 +223,19 @@ public class ServicioReservasImpl implements IServicioReservas {
             return false;
         }
         reservaDAO.cancelar(idReserva, motivo);
+        
+        // Enviar notificacion de cancelacion al residente
+        try {
+            fis.dsw.sgc.comunicacion.service.IComunicacionService comm = new fis.dsw.sgc.comunicacion.service.ComunicacionServiceImpl(new fis.dsw.sgc.comunicacion.dao.ComunicacionDAOSQLite());
+            long emisor = comm.obtenerIdEmisorActual();
+            String titulo = "Reserva Cancelada";
+            String contenido = "Su reserva del espacio " + dto.getNombreEspacio() + " para la fecha " + dto.getFechaReserva() + " ha sido cancelada.\nMotivo: " + motivo;
+            fis.dsw.sgc.comunicacion.dto.EnviarComunicacionDTO dtoCom = new fis.dsw.sgc.comunicacion.dto.EnviarComunicacionDTO(emisor, (long) dto.getIdUsuario(), "MENSAJE_RESIDENTES", "NORMAL", titulo, contenido);
+            comm.enviarMensaje(dtoCom);
+        } catch (Exception e) {
+            System.err.println("Error al enviar notificacion de cancelacion: " + e.getMessage());
+        }
+        
         return true;
     }
 
