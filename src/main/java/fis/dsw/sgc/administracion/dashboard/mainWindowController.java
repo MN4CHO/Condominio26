@@ -257,6 +257,18 @@ public class mainWindowController {
         }
     }
 
+    private void cargarVista(String rutaFxml) {
+        try {
+            Parent vista = FXMLLoader.load(getClass().getResource(rutaFxml));
+            contentPane.getChildren().clear();
+            contentPane.getChildren().add(vista);
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            contentPane.getChildren().clear();
+            contentPane.getChildren().add(crearPlaceholder("Vista aún no implementada:\n" + rutaFxml));
+        }
+    }
+
 
     private Label crearPlaceholder(String mensaje) {
         Label aviso = new Label(mensaje);
