@@ -83,6 +83,12 @@ public class AnadirReservaController {
     private VBox panelError;
 
     @FXML
+    private javafx.scene.control.Label lblTituloError;
+
+    @FXML
+    private javafx.scene.control.Label lblMensajeError;
+
+    @FXML
     private VBox panelPrincipal;
 
     private ObservableList<HorarioFila> datosHorario = FXCollections.observableArrayList();
@@ -153,7 +159,40 @@ public class AnadirReservaController {
                                 setBackground(new Background(new BackgroundFill(Color.web("#fff8e1"), CornerRadii.EMPTY, Insets.EMPTY)));
                                 setStyle("-fx-text-fill: #f57f17; -fx-font-weight: bold; -fx-cursor: default; -fx-font-size: 11px;");
                             } else {
-                                if (isSelected) {
+                                int colIndex = getTableView().getColumns().indexOf(getTableColumn());
+                                java.time.LocalDate today = java.time.LocalDate.now();
+                                java.time.LocalDate monday = today.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+                                java.time.LocalDate cellDate = monday.plusWeeks(semanaOffset).plusDays(colIndex - 1);
+                                
+                                HorarioFila fila = getTableRow() != null ? getTableRow().getItem() : null;
+                                
+                                if (fila != null && fila.getHora() != null && fila.getHora().equals("Cerrado")) {
+                                    setText("");
+                                    setBackground(new Background(new BackgroundFill(Color.web("#f3f4f6"), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    setStyle("-fx-cursor: default;");
+                                    setDisable(true);
+                                    return;
+                                }
+
+                                boolean isPast = false;
+                                if (fila != null && fila.getHora() != null) {
+                                    String[] parts = fila.getHora().split(" - ");
+                                    if (parts.length == 2) {
+                                        String horaInicioStr = parts[0];
+                                        java.time.LocalTime horaInicio = java.time.LocalTime.parse(horaInicioStr);
+                                        java.time.LocalDateTime cellDateTime = java.time.LocalDateTime.of(cellDate, horaInicio);
+                                        if (cellDateTime.isBefore(java.time.LocalDateTime.now())) {
+                                            isPast = true;
+                                        }
+                                    }
+                                }
+
+                                if (isPast) {
+                                    setText("Expirado");
+                                    setBackground(new Background(new BackgroundFill(Color.web("#f3f4f6"), CornerRadii.EMPTY, Insets.EMPTY)));
+                                    setStyle("-fx-text-fill: #9ca3af; -fx-cursor: default; -fx-font-size: 11px;");
+                                    setDisable(true);
+                                } else if (isSelected) {
                                     setBackground(new Background(new BackgroundFill(Color.web("#e0f2fe"), CornerRadii.EMPTY, Insets.EMPTY)));
                                     setStyle("-fx-text-fill: #0284c7; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 12px;");
                                 } else {
@@ -175,7 +214,7 @@ public class AnadirReservaController {
                 }
 
                 HorarioFila fila = cell.getTableRow().getItem();
-                if (fila == null) return;
+                if (fila == null || fila.getHora().equals("Cerrado")) return;
 
                 if (seleccionandoInicio) {
                     columnaBloqueada = cell.getTableColumn();
@@ -279,9 +318,10 @@ public class AnadirReservaController {
     private void generarHorasBase() {
         datosHorario.clear();
         String[] horas = {
+            "00:00 - 02:00",
+            "Cerrado",
             "08:00 - 10:00", "10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00",
-            "16:00 - 18:00", "18:00 - 20:00", "20:00 - 22:00", "22:00 - 00:00",
-            "00:00 - 02:00"
+            "16:00 - 18:00", "18:00 - 20:00", "20:00 - 22:00", "22:00 - 00:00"
         };
         for (String h : horas) {
             datosHorario.add(new HorarioFila(h));
@@ -439,24 +479,35 @@ public class AnadirReservaController {
         if (espacio == null || fecha == null || fecha.isEmpty()
                 || horaInicio == null || horaInicio.isEmpty()
                 || horaFin == null || horaFin.isEmpty()) {
-            mostrarError();
+            mostrarError("Datos incompletos", "Por favor, selecciona un espacio y un horario válido en la tabla.");
             return;
         }
 
-        boolean ok = servicioReservas.crearReserva(obtenerIdUsuarioActual(),
+        String error = servicioReservas.crearReserva(obtenerIdUsuarioActual(),
                 espacio.getIdEspacioComun(), fecha, horaInicio, horaFin);
 
-        if (ok) {
+        if (error == null) {
             // Recargar disponibilidad para reflejar la nueva reserva.
             cargarDisponibilidad(espacioNombre);
             limpiarSeleccion();
         } else {
             // Rechazada por mora o solapamiento (ver consola del servicio).
-            mostrarError();
+            if (error.contains("deuda pendiente")) {
+                mostrarError("Reserva Bloqueada", error);
+            } else {
+                mostrarError("Horario no disponible", error);
+            }
         }
     }
 
-    private void mostrarError() {
+    private void mostrarError(String titulo, String mensaje) {
+        if (lblTituloError != null) {
+            lblTituloError.setText(titulo);
+        }
+        if (lblMensajeError != null) {
+            lblMensajeError.setText(mensaje);
+        }
+        
         if (panelPrincipal != null) {
             panelPrincipal.setVisible(false);
             panelPrincipal.setManaged(false);

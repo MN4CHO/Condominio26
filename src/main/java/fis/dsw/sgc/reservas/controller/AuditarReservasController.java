@@ -1,7 +1,7 @@
 package fis.dsw.sgc.reservas.controller;
 
 import fis.dsw.sgc.inmuebles.dto.EspacioReservableDTO;
-import fis.dsw.sgc.reservas.model.EstadoReserva;
+import fis.dsw.sgc.reservas.model.IEstadoReserva;
 import fis.dsw.sgc.reservas.model.Reserva;
 import fis.dsw.sgc.reservas.service.IServicioReservas;
 import fis.dsw.sgc.reservas.service.ServicioReservasImpl;
@@ -97,7 +97,7 @@ public class AuditarReservasController {
         colHoraInicio.setCellValueFactory(new PropertyValueFactory<>("horaInicio"));
         colHoraFin.setCellValueFactory(new PropertyValueFactory<>("horaFin"));
         colEstado.setCellValueFactory(cd -> new SimpleStringProperty(
-                cd.getValue().getEstado() != null ? cd.getValue().getEstado().name() : ""));
+                cd.getValue().getEstado() != null ? cd.getValue().getEstado().getNombreEstado() : ""));
 
         configurarColumnaEstado();
         configurarColumnaOpciones();
@@ -222,33 +222,34 @@ public class AuditarReservasController {
                     return;
                 }
                 Reserva reserva = getTableView().getItems().get(getIndex());
-                EstadoReserva estado = reserva.getEstado();
+                IEstadoReserva estado = reserva.getEstado();
                 HBox box = new HBox(10);
                 box.setAlignment(Pos.CENTER);
                 btnAccion.setPrefWidth(150);
                 btnAccion.getStyleClass().removeAll("btn-accion-tabla", "btn-accion-cancelar", "btn-accion-observacion");
-                btnAccion.getStyleClass().add("btn-accion-tabla");
-
-                if (estado == EstadoReserva.ACTIVA) {
-                    btnAccion.setText("Cancelar Reserva");
-                    btnAccion.getStyleClass().add("btn-accion-cancelar");
-                    btnAccion.setDisable(false);
-                    btnAccion.setStyle("");
-                    btnAccion.setOnAction(e -> cancelarReserva(reserva));
-                    box.getChildren().add(btnAccion);
+                
+                if (estado != null && estado.puedeCancelar()) {
+                    Button btn = new Button("Cancelar");
+                    btn.setStyle("-fx-background-color: #c62828; -fx-text-fill: white; -fx-font-weight: bold;");
+                    btn.setOnAction(e -> cancelarReserva(reserva));
+                    box.getChildren().add(btn);
                     setGraphic(box);
-                } else if (estado == EstadoReserva.FINALIZADA) {
-                    btnAccion.setText("Agregar Observación");
-                    btnAccion.getStyleClass().add("btn-accion-observacion");
-                    if (reservasConObservacion.contains(reserva.getId())) {
-                        btnAccion.setDisable(true);
-                        btnAccion.setStyle("-fx-background-color: #e5e7eb; -fx-text-fill: #9ca3af; -fx-opacity: 1;");
+                } else if (estado != null && estado.puedeAgregarObservacion()) {
+                    Button btn = new Button("Anadir Observación");
+                    int idUsuarioActual = obtenerIdUsuarioActual();
+                    boolean yaComento = reserva.getObservaciones().stream()
+                            .anyMatch(obs -> obs.getIdAutor() == idUsuarioActual);
+                    boolean limiteAlcanzado = reserva.getObservaciones().size() >= 2;
+
+                    if (yaComento || limiteAlcanzado) {
+                        btn.setDisable(true);
+                        btn.setStyle("-fx-background-color: #e5e7eb; -fx-text-fill: #9ca3af; -fx-opacity: 1; -fx-font-weight: bold;");
                     } else {
-                        btnAccion.setDisable(false);
-                        btnAccion.setStyle("");
-                        btnAccion.setOnAction(e -> abrirPanelObservacion(reserva));
+                        btn.setDisable(false);
+                        btn.setStyle("-fx-background-color: #616161; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+                        btn.setOnAction(e -> abrirPanelObservacion(reserva));
                     }
-                    box.getChildren().add(btnAccion);
+                    box.getChildren().add(btn);
                     setGraphic(box);
                 } else {
                     setGraphic(null);
@@ -329,5 +330,13 @@ public class AuditarReservasController {
         }
         cancelarObservacion(event);
         cargarReservas();
+    }
+
+    @FXML
+    void limpiarFiltros(ActionEvent event) {
+        txtBusquedaResidente.clear();
+        cbFiltroEspacio.setValue("Todos");
+        dpFechaInicio.setValue(null);
+        dpFechaFin.setValue(null);
     }
 }
