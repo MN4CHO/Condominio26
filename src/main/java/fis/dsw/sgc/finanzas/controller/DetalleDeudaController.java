@@ -60,7 +60,6 @@ public class DetalleDeudaController {
         lblValor.setText("Valor: " + deuda.getValor());
         lblFecha.setText("Fecha máx.: " + deuda.getFechaMaximaPago());
         lblEstado.setText("Estado: " + deuda.getEstado());
-        lblDescripcion.setText("Descripción: " + deuda.getDescripcion());
         btnValidar.setVisible("EN PROCESO".equalsIgnoreCase(deuda.getEstado()));
         btnValidar.setManaged(btnValidar.isVisible());
         setMensaje("Elija una acción sobre esta deuda.", "message-info");

@@ -12,104 +12,64 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox
-      alignment="TOP_CENTER"
-      maxHeight="1.7976931348623157E308"
-      maxWidth="1.7976931348623157E308"
-      prefHeight="600.0"
-      prefWidth="900.0"
-      spacing="0"
-      styleClass="module-content"
-      stylesheets="@../css/finanzasStyles.css,@../css/finanzasBryan.css"
-      xmlns="http://javafx.com/javafx/26"
-      xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="900.0" spacing="0" styleClass="module-content" stylesheets="@../css/finanzasStyles.css,@../css/finanzasBryan.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
 
     <padding>
-        <Insets bottom="28.0" left="28.0" right="28.0" top="24.0"/>
+        <Insets bottom="28.0" left="28.0" right="28.0" top="24.0" />
     </padding>
 
     <children>
-        <VBox maxWidth="1080.0"
-              maxHeight="1.7976931348623157E308"
-              spacing="14.0"
-              alignment="TOP_CENTER"
-              VBox.vgrow="ALWAYS">
+        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1080.0" spacing="14.0" VBox.vgrow="ALWAYS">
             <children>
-                <HBox alignment="CENTER" spacing="10.0"
-                      maxWidth="1.7976931348623157E308">
+                <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0">
                     <children>
-                        <FontIcon iconLiteral="fa-search" iconSize="22" styleClass="module-title-icon"/>
-                        <Label styleClass="module-title" text="Consultar deudas"/>
+                        <FontIcon iconLiteral="fa-search" iconSize="22" styleClass="module-title-icon" />
+                        <Label styleClass="module-title" text="Consultar deudas" />
                     </children>
                 </HBox>
-                <Label styleClass="module-subtitle"
-                       wrapText="true"
-                       textAlignment="CENTER"
-                       maxWidth="1.7976931348623157E308"
-                       text="Consulte deudas por cédula. El presidente ve más opciones por fila."/>
+                <Label maxWidth="1.7976931348623157E308" styleClass="module-subtitle" text="Consulte deudas por cédula. El presidente ve más opciones por fila." textAlignment="CENTER" wrapText="true" />
 
-                <VBox spacing="12.0" styleClass="module-card"
-                      maxWidth="1.7976931348623157E308">
+                <VBox maxWidth="1.7976931348623157E308" spacing="12.0" styleClass="module-card">
                     <padding>
-                        <Insets bottom="20.0" left="24.0" right="24.0" top="20.0"/>
+                        <Insets bottom="20.0" left="24.0" right="24.0" top="20.0" />
                     </padding>
                     <children>
                         <HBox alignment="CENTER_LEFT" spacing="12.0">
                             <children>
-                                <FontIcon iconLiteral="fa-user" iconSize="14" styleClass="field-icon"/>
-                                <Label styleClass="form-label" text="Rol demo"/>
-                                <ComboBox fx:id="cmbRol" prefWidth="160.0"/>
-                                <FontIcon iconLiteral="fa-id-card" iconSize="14" styleClass="field-icon"/>
-                                <Label styleClass="form-label" text="Cédula"/>
-                                <TextField fx:id="txtCedula"
-                                           prefWidth="300.0"
-                                           maxWidth="400.0"
-                                           promptText="Número de cédula del residente"/>
-                                <Region HBox.hgrow="ALWAYS"/>
-                                <Button fx:id="btnConsultar"
-                                        mnemonicParsing="false"
-                                        onAction="#consultar"
-                                        styleClass="primary-button"
-                                        text="Consultar"/>
-                                <Button fx:id="btnLimpiar"
-                                        mnemonicParsing="false"
-                                        onAction="#limpiar"
-                                        styleClass="secondary-button"
-                                        text="Limpiar"/>
+                                <FontIcon iconLiteral="fa-user" iconSize="14" styleClass="field-icon" />
+                                <Label styleClass="form-label" text="Rol demo" />
+                                <ComboBox fx:id="cmbRol" prefWidth="160.0" />
+                                <FontIcon iconLiteral="fa-id-card" iconSize="14" styleClass="field-icon" />
+                                <Label styleClass="form-label" text="Cédula" />
+                                <TextField fx:id="txtCedula" maxWidth="400.0" prefWidth="300.0" promptText="Número de cédula del residente" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Button fx:id="btnConsultar" mnemonicParsing="false" onAction="#consultar" styleClass="primary-button" text="Consultar" />
+                                <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#limpiar" styleClass="secondary-button" text="Limpiar" />
                             </children>
                         </HBox>
-                        <Label fx:id="lblMensaje" styleClass="message-label, message-info"
-                               wrapText="true" text=""/>
+                        <Label fx:id="lblMensaje" styleClass="message-label, message-info" text="" wrapText="true" />
                     </children>
                 </VBox>
 
-                <VBox maxHeight="1.7976931348623157E308"
-                      maxWidth="1.7976931348623157E308"
-                      spacing="8.0"
-                      styleClass="table-card"
-                      VBox.vgrow="ALWAYS">
+                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="8.0" styleClass="table-card" VBox.vgrow="ALWAYS">
                     <padding>
-                        <Insets bottom="12.0" left="12.0" right="12.0" top="12.0"/>
+                        <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
                     </padding>
                     <children>
                         <HBox alignment="CENTER_LEFT" spacing="8.0">
                             <children>
-                                <FontIcon iconLiteral="fa-list" iconSize="15" styleClass="section-icon"/>
-                                <Label styleClass="module-section-title" text="Resultados"/>
+                                <FontIcon iconLiteral="fa-list" iconSize="15" styleClass="section-icon" />
+                                <Label styleClass="module-section-title" text="Resultados" />
                             </children>
                         </HBox>
-                        <TableView fx:id="tablaDeudas"
-                                   maxHeight="1.7976931348623157E308"
-                                   maxWidth="1.7976931348623157E308"
-                                   VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tablaDeudas" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="colId" prefWidth="90.0" text="ID"/>
-                                <TableColumn fx:id="colMotivo" prefWidth="110.0" text="Motivo"/>
-                                <TableColumn fx:id="colValor" prefWidth="90.0" text="Valor"/>
-                                <TableColumn fx:id="colFechaMax" prefWidth="130.0" text="Fecha máx. pago"/>
-                                <TableColumn fx:id="colEstado" prefWidth="110.0" text="Estado"/>
-                                <TableColumn fx:id="colDescripcion" prefWidth="200.0" text="Descripción"/>
-                                <TableColumn fx:id="colOpciones" prefWidth="130.0" text="Opciones"/>
+                                <TableColumn fx:id="colId" prefWidth="90.0" text="ID" />
+                                <TableColumn fx:id="colMotivo" prefWidth="110.0" text="Motivo" />
+                                <TableColumn fx:id="colValor" prefWidth="90.0" text="Valor" />
+                                <TableColumn fx:id="colFechaMax" prefWidth="130.0" text="Fecha máx. pago" />
+                                <TableColumn fx:id="colEstado" prefWidth="129.60006713867188" text="Estado" />
+                                <TableColumn fx:id="colOpciones" prefWidth="275.20001220703125" text="Opciones" />
                             </columns>
                         </TableView>
                     </children>
