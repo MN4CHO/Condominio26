@@ -12,20 +12,12 @@ public class FachadaParaReservasImpl implements IFachadaParaReservas {
         this.deudaService = deudaService;
     }
 
+    @Override
     public void registrarDeuda(NuevaDeudaDTO nuevaDeuda) {
         deudaService.registrarDeuda(nuevaDeuda);
     }
 
-    @Override
-    public boolean tieneDeudasEnMora(String cedulaResidente) {
-        if("1111111111".equals(cedulaResidente)){
-            return true;
-        }
-        return false;
-    }
 
-    @Override
-    public void registrarDeuda(String cedula, String reserva, LocalDate fechaMaximaPago, String descripcion, double v) {
 
-    }
+
 }

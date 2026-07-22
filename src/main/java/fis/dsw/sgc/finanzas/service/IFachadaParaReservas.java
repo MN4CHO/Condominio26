@@ -7,7 +7,5 @@ import java.time.LocalDate;
 
 public interface IFachadaParaReservas {
 
-    boolean tieneDeudasEnMora(String cedulaResidente);
-
-    void registrarDeuda(String cedula, String reserva, LocalDate fechaMaximaPago, String descripcion, double v);
+    void registrarDeuda(NuevaDeudaDTO nuevaDeuda);
 }
