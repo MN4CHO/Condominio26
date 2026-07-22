@@ -65,6 +65,10 @@ public class Main extends Application {
         fis.dsw.sgc.reservas.service.IServicioReservas servicioReservas = new fis.dsw.sgc.reservas.service.ServicioReservasImpl(reservaDAO,observacionReservaDAO,inmueblesService,fachaReservas);
         fis.dsw.sgc.comunicacion.service.IComunicacionService comunicacionService = new fis.dsw.sgc.comunicacion.service.ComunicacionServiceImpl(comunicacionDAO);
         fis.dsw.sgc.administracion.service.IGestionCuentasService cuentasService = new fis.dsw.sgc.administracion.service.GestionCuentasServiceImpl(usuarioDAO,cuentaDAO,rolDAO,permisoDAO,tokenDAO);
+        
+        // Inyectamos gestionUsuariosAPI en servicioReservas para que funcione la obtención de cédula
+        ((fis.dsw.sgc.reservas.service.ServicioReservasImpl) servicioReservas).setGestionUsuariosAPI(usuariosService);
+
 // 1. Empaquetamos las dependencias en el orden exacto que espera mainWindowController
         // 1. Empaquetamos EXACTAMENTE las 13 dependencias requeridas
         Object[] paqueteDependencias = new Object[] {

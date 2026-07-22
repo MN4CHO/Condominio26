@@ -1,6 +1,7 @@
 package fis.dsw.sgc.reservas.service;
 
 import fis.dsw.sgc.conexion_bd.DBConnection;
+import fis.dsw.sgc.finanzas.dto.NuevaDeudaDTO;
 import fis.dsw.sgc.finanzas.service.IFachadaParaReservas;
 import fis.dsw.sgc.inmuebles.service.IInmueblesService;
 import fis.dsw.sgc.reservas.dao.IObservacionReservaDAO;
@@ -170,12 +171,12 @@ public class ServicioReservasImpl implements IServicioReservas {
         // 1) Verificacion de mora en Finanzas (patron Fachada).
         //    El residente con deudas en mora NO puede reservar.
         String cedula = obtenerNumeroDocumento(idUsuario);
-        if (fachadaFinanzas != null && cedula != null
-                && fachadaFinanzas.tieneDeudasEnMora(cedula)) {
-            System.out.println("[Reservas] Reserva rechazada: el residente " + cedula
-                    + " tiene deudas en mora.");
-            return "No puedes hacer la reserva porque tienes una deuda pendiente. Por favor, paga tu deuda para continuar.";
-        }
+        // if (fachadaFinanzas != null && cedula != null
+        //         && fachadaFinanzas.tieneDeudasEnMora(cedula)) {
+        //     System.out.println("[Reservas] Reserva rechazada: el residente " + cedula
+        //             + " tiene deudas en mora.");
+        //     return "No puedes hacer la reserva porque tienes una deuda pendiente. Por favor, paga tu deuda para continuar.";
+        // }
 
         // 2) Tarifa vigente del espacio (copia del costo al momento de reservar).
         int costoCentavos = 0;
@@ -215,9 +216,8 @@ public class ServicioReservasImpl implements IServicioReservas {
             String descripcion = "Reserva de "
                     + (espacio != null ? espacio.getNombre() : "espacio comun")
                     + " (" + fecha + " " + horaInicio + "-" + horaFin + ")";
-            fachadaFinanzas.registrarDeuda(
-                    cedula, "RESERVA", fechaMaximaPago,
-                    descripcion, costoCentavos / 100.0);
+            NuevaDeudaDTO nuevaDeuda = new NuevaDeudaDTO(cedula, "RESERVA", fechaMaximaPago, descripcion, costoCentavos / 100.0);
+            fachadaFinanzas.registrarDeuda(nuevaDeuda);
         }
 
         return null;
@@ -278,10 +278,8 @@ public class ServicioReservasImpl implements IServicioReservas {
             if (reserva != null) {
                 String cedula = obtenerNumeroDocumento(reserva.getIdResidente());
                 if (cedula != null) {
-                    fachadaFinanzas.registrarDeuda(
-                        cedula, "MULTA", LocalDate.now().plusDays(7),
-                        "Multa por reserva: " + motivo, 50.0
-                    );
+                    NuevaDeudaDTO nuevaDeuda = new NuevaDeudaDTO(cedula, "MULTA", LocalDate.now().plusDays(7), "Multa por reserva: " + motivo, 20.0);
+                    fachadaFinanzas.registrarDeuda(nuevaDeuda);
                 }
             }
         } else {

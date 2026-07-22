@@ -431,37 +431,44 @@ public class mainWindowController {
 
     @FXML
     void irARegistrarCuenta(ActionEvent event) {
-        cargarVista("/administracion/fxml/registrarCuenta.fxml");
+        fis.dsw.sgc.administracion.controller.RegistrarCuentaController controller = new fis.dsw.sgc.administracion.controller.RegistrarCuentaController(gestionCuentasService);
+        cargarVista("/administracion/fxml/registrarCuenta.fxml", controller);
     }
 
     @FXML
     void irAActualizarPerfil(ActionEvent event) {
-        cargarVista("/administracion/fxml/actualizarPerfil.fxml");
+        fis.dsw.sgc.administracion.controller.ActualizarPerfilController controller = new fis.dsw.sgc.administracion.controller.ActualizarPerfilController(gestionCuentasService);
+        cargarVista("/administracion/fxml/actualizarPerfil.fxml", controller);
     }
 
     @FXML
     void irAActualizarInformacionCuenta(ActionEvent event) {
-        cargarVista("/administracion/fxml/actualizarInformacionDeCuenta.fxml");
+        fis.dsw.sgc.administracion.controller.ActualizarInformacionDeCuentaController controller = new fis.dsw.sgc.administracion.controller.ActualizarInformacionDeCuentaController(gestionCuentasService);
+        cargarVista("/administracion/fxml/actualizarInformacionDeCuenta.fxml", controller);
     }
 
     @FXML
     void irADesactivarCuenta(ActionEvent event) {
-        cargarVista("/administracion/fxml/desactivarCuenta.fxml");
+        fis.dsw.sgc.administracion.controller.DesactivarCuentaController controller = new fis.dsw.sgc.administracion.controller.DesactivarCuentaController(gestionCuentasService);
+        cargarVista("/administracion/fxml/desactivarCuenta.fxml", controller);
     }
 
     @FXML
     void irAAsignarRol(ActionEvent event) {
-        cargarVista("/administracion/fxml/asignarRol.fxml");
+        fis.dsw.sgc.administracion.controller.AsignarRolController controller = new fis.dsw.sgc.administracion.controller.AsignarRolController(gestionCuentasService);
+        cargarVista("/administracion/fxml/asignarRol.fxml", controller);
     }
 
     @FXML
     void irADefinirPermisos(ActionEvent event) {
-        cargarVista("/administracion/fxml/definirPermisos.fxml");
+        fis.dsw.sgc.administracion.controller.DefinirPermisosController controller = new fis.dsw.sgc.administracion.controller.DefinirPermisosController(gestionCuentasService);
+        cargarVista("/administracion/fxml/definirPermisos.fxml", controller);
     }
 
     @FXML
     void irARecuperarContrasena(ActionEvent event) {
-        cargarVista("/administracion/fxml/recuperarContrasena.fxml");
+        fis.dsw.sgc.administracion.controller.RecuperarContrasenaController controller = new fis.dsw.sgc.administracion.controller.RecuperarContrasenaController(gestionCuentasService);
+        cargarVista("/administracion/fxml/recuperarContrasena.fxml", controller);
     }
 
 }
