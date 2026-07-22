@@ -57,7 +57,12 @@ public class VerReservaController {
     @FXML private TableColumn<Reserva, String> colEstado;
     @FXML private TableColumn<Reserva, Void> colOpciones;
 
-    private final IServicioReservas servicioReservas = ServicioReservasImpl.getInstancia();
+    private final IServicioReservas servicioReservas;
+
+    // Constructor para inyección de dependencias
+    public VerReservaController(IServicioReservas servicioReservas) {
+        this.servicioReservas = servicioReservas;
+    }
 
     private Reserva reservaSeleccionadaParaObservacion = null;
     private final Set<Integer> reservasConObservacion = new HashSet<>();

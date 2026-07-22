@@ -31,8 +31,12 @@ public class RegistrarCasoFortuitoController {
     @FXML private TableColumn<CasoFortuitoDTO, String> colDescripcion;
     @FXML private TableColumn<CasoFortuitoDTO, String> colEstado;
 
-    private final IInmuebleDAO inmuebleDAO = new InmuebleDAOMySQL();
-    private final IInmueblesService inmueblesService = new InmueblesServiceImpl(inmuebleDAO);
+    private final IInmueblesService inmueblesService;
+
+    // Constructor para inyección de dependencias
+    public RegistrarCasoFortuitoController(IInmueblesService inmueblesService) {
+        this.inmueblesService = inmueblesService;
+    }
 
     private Inmueble inmuebleActual;
 

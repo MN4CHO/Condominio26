@@ -31,8 +31,12 @@ public class RegistrarInmuebleController {
     @FXML private CheckBox chkVenta;
     @FXML private Label lblMensaje;
 
-    private final IInmuebleDAO inmuebleDAO = new InmuebleDAOMySQL();
-    private final IInmueblesService inmueblesService = new InmueblesServiceImpl(inmuebleDAO);
+    private final IInmueblesService inmueblesService;
+
+    // Constructor para inyección de dependencias
+    public RegistrarInmuebleController(IInmueblesService inmueblesService) {
+        this.inmueblesService = inmueblesService;
+    }
 
     private static final OpcionComboDTO SIN_PROPIETARIO = new OpcionComboDTO(0, "Sin propietario");
 

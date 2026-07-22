@@ -66,7 +66,7 @@ public class Main extends Application {
         fis.dsw.sgc.comunicacion.service.IComunicacionService comunicacionService = new fis.dsw.sgc.comunicacion.service.ComunicacionServiceImpl(comunicacionDAO);
         fis.dsw.sgc.administracion.service.IGestionCuentasService cuentasService = new fis.dsw.sgc.administracion.service.GestionCuentasServiceImpl(usuarioDAO,cuentaDAO,rolDAO,permisoDAO,tokenDAO);
 // 1. Empaquetamos las dependencias en el orden exacto que espera mainWindowController
-        // 1. Empaquetamos EXACTAMENTE las 12 dependencias requeridas
+        // 1. Empaquetamos EXACTAMENTE las 13 dependencias requeridas
         Object[] paqueteDependencias = new Object[] {
                 pagoService,            // 0
                 gastoService,           // 1
@@ -79,7 +79,8 @@ public class Main extends Application {
                 servicioReservas,       // 8
                 comunicacionService,    // 9
                 usuariosService,        // 10
-                cuentasService          // 11
+                cuentasService,         // 11
+                inmueblesService        // 12
         };
 
         // 2. Instanciamos el loader para la vista de Login

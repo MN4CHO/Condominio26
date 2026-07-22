@@ -47,8 +47,12 @@ public class inmueblesController {
     @FXML
     private TableColumn<InmuebleResumenDTO, String> colEstado;
 
-    private final IInmuebleDAO inmuebleDAO = new InmuebleDAOMySQL();
-    private final IInmueblesService inmueblesService = new InmueblesServiceImpl(inmuebleDAO);
+    private final IInmueblesService inmueblesService;
+
+    // Constructor para inyección de dependencias
+    public inmueblesController(IInmueblesService inmueblesService) {
+        this.inmueblesService = inmueblesService;
+    }
 
     @FXML
     public void initialize() {

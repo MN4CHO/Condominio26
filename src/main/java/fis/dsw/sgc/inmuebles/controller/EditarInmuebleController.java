@@ -34,8 +34,12 @@ public class EditarInmuebleController {
     @FXML private ComboBox<String> cmbEstado;
     @FXML private Label lblMensaje;
 
-    private final IInmuebleDAO inmuebleDAO = new InmuebleDAOMySQL();
-    private final IInmueblesService inmueblesService = new InmueblesServiceImpl(inmuebleDAO);
+    private final IInmueblesService inmueblesService;
+
+    // Constructor para inyección de dependencias
+    public EditarInmuebleController(IInmueblesService inmueblesService) {
+        this.inmueblesService = inmueblesService;
+    }
 
     private Inmueble inmuebleActual;
 

@@ -20,8 +20,7 @@
       styleClass="module-content"
       stylesheets="@../css/reservasStyles.css"
       xmlns="http://javafx.com/javafx/26"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="fis.dsw.sgc.reservas.controller.VerReservaController">
+      xmlns:fx="http://javafx.com/fxml/1">
 
    <padding>
       <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />

@@ -70,8 +70,9 @@ public class mainWindowController {
     private final fis.dsw.sgc.comunicacion.service.IComunicacionService comunicacionService;
     private final fis.dsw.sgc.administracion.service.IGestionUsuariosAPI usuariosService;
     private final fis.dsw.sgc.administracion.service.IGestionCuentasService gestionCuentasService;
+    private final fis.dsw.sgc.inmuebles.service.IInmueblesService inmueblesService;
 
-    public mainWindowController(fis.dsw.sgc.finanzas.service.IPagoService pagoService, fis.dsw.sgc.finanzas.service.IGastoService gastoService, fis.dsw.sgc.finanzas.service.IDeudaService deudaService, fis.dsw.sgc.finanzas.service.IConfiguracionFinancieraService financieraService, fis.dsw.sgc.finanzas.service.IReportesService reportesService, fis.dsw.sgc.check_in.service.ICheckInService checkInService, fis.dsw.sgc.check_in.service.IAlertaSeguridadService alertaSeguridadService, fis.dsw.sgc.check_in.service.IProgramVisitaService programVisitaService, fis.dsw.sgc.reservas.service.IServicioReservas servicioReservas, fis.dsw.sgc.comunicacion.service.IComunicacionService comunicacionService, fis.dsw.sgc.administracion.service.IGestionUsuariosAPI usuariosService, fis.dsw.sgc.administracion.service.IGestionCuentasService gestionCuentasService) {
+    public mainWindowController(fis.dsw.sgc.finanzas.service.IPagoService pagoService, fis.dsw.sgc.finanzas.service.IGastoService gastoService, fis.dsw.sgc.finanzas.service.IDeudaService deudaService, fis.dsw.sgc.finanzas.service.IConfiguracionFinancieraService financieraService, fis.dsw.sgc.finanzas.service.IReportesService reportesService, fis.dsw.sgc.check_in.service.ICheckInService checkInService, fis.dsw.sgc.check_in.service.IAlertaSeguridadService alertaSeguridadService, fis.dsw.sgc.check_in.service.IProgramVisitaService programVisitaService, fis.dsw.sgc.reservas.service.IServicioReservas servicioReservas, fis.dsw.sgc.comunicacion.service.IComunicacionService comunicacionService, fis.dsw.sgc.administracion.service.IGestionUsuariosAPI usuariosService, fis.dsw.sgc.administracion.service.IGestionCuentasService gestionCuentasService, fis.dsw.sgc.inmuebles.service.IInmueblesService inmueblesService) {
         this.pagoService = pagoService;
         this.gastoService = gastoService;
         this.deudaService = deudaService;
@@ -84,6 +85,7 @@ public class mainWindowController {
         this.comunicacionService = comunicacionService;
         this.usuariosService = usuariosService;
         this.gestionCuentasService = gestionCuentasService;
+        this.inmueblesService = inmueblesService;
     }
 
     // Constructor sin argumentos: red de seguridad si la inyección manual de
@@ -107,7 +109,8 @@ public class mainWindowController {
                 (fis.dsw.sgc.reservas.service.IServicioReservas) dependenciasPorDefecto[8],
                 (fis.dsw.sgc.comunicacion.service.IComunicacionService) dependenciasPorDefecto[9],
                 (fis.dsw.sgc.administracion.service.IGestionUsuariosAPI) dependenciasPorDefecto[10],
-                (fis.dsw.sgc.administracion.service.IGestionCuentasService) dependenciasPorDefecto[11]
+                (fis.dsw.sgc.administracion.service.IGestionCuentasService) dependenciasPorDefecto[11],
+                (fis.dsw.sgc.inmuebles.service.IInmueblesService) dependenciasPorDefecto[12]
         );
     }
 
@@ -166,7 +169,7 @@ public class mainWindowController {
         return new Object[] {
                 pagoService, gastoService, deudaService, financieraService, reportesService,
                 checkInService, alertaSeguridadService, programVisitaService, servicioReservas,
-                comunicacionService, usuariosService, cuentasService
+                comunicacionService, usuariosService, cuentasService, inmueblesService
         };
     }
 
@@ -315,16 +318,37 @@ public class mainWindowController {
 
     // ==================== Submenú Inmuebles ====================
 
-    @FXML void irAVerInmuebles(ActionEvent event) { cargarVista("/inmuebles/fxml/inmuebles_home.fxml"); }
-    @FXML void irARegistrarInmueble(ActionEvent event) { cargarVista("/inmuebles/fxml/registrarInmueble.fxml"); }
-    @FXML void irAEditarInmueble(ActionEvent event) { cargarVista("/inmuebles/fxml/editarInmueble.fxml"); }
-    @FXML void irARegistrarCasoFortuito(ActionEvent event) { cargarVista("/inmuebles/fxml/registrarCasoFortuito.fxml"); }
+    @FXML void irAVerInmuebles(ActionEvent event) {
+        fis.dsw.sgc.inmuebles.controller.inmueblesController controller = new fis.dsw.sgc.inmuebles.controller.inmueblesController(inmueblesService);
+        cargarVista("/inmuebles/fxml/inmuebles_home.fxml", controller);
+    }
+    @FXML void irARegistrarInmueble(ActionEvent event) {
+        fis.dsw.sgc.inmuebles.controller.RegistrarInmuebleController controller = new fis.dsw.sgc.inmuebles.controller.RegistrarInmuebleController(inmueblesService);
+        cargarVista("/inmuebles/fxml/registrarInmueble.fxml", controller);
+    }
+    @FXML void irAEditarInmueble(ActionEvent event) {
+        fis.dsw.sgc.inmuebles.controller.EditarInmuebleController controller = new fis.dsw.sgc.inmuebles.controller.EditarInmuebleController(inmueblesService);
+        cargarVista("/inmuebles/fxml/editarInmueble.fxml", controller);
+    }
+    @FXML void irARegistrarCasoFortuito(ActionEvent event) {
+        fis.dsw.sgc.inmuebles.controller.RegistrarCasoFortuitoController controller = new fis.dsw.sgc.inmuebles.controller.RegistrarCasoFortuitoController(inmueblesService);
+        cargarVista("/inmuebles/fxml/registrarCasoFortuito.fxml", controller);
+    }
 
     // ==================== Submenú Reservas ====================
 
-    @FXML void irAAnadirReserva(ActionEvent event)       { cargarVista("/reservas/fxml/anadirReserva.fxml");       }
-    @FXML void irAVerReserva(ActionEvent event)          { cargarVista("/reservas/fxml/verReserva.fxml");          }
-    @FXML void irAAuditarReservas(ActionEvent event)     { cargarVista("/reservas/fxml/auditarReservas.fxml");     }
+    @FXML void irAAnadirReserva(ActionEvent event) {
+        fis.dsw.sgc.reservas.controller.AnadirReservaController controller = new fis.dsw.sgc.reservas.controller.AnadirReservaController(servicioReservas);
+        cargarVista("/reservas/fxml/anadirReserva.fxml", controller);
+    }
+    @FXML void irAVerReserva(ActionEvent event) {
+        fis.dsw.sgc.reservas.controller.VerReservaController controller = new fis.dsw.sgc.reservas.controller.VerReservaController(servicioReservas);
+        cargarVista("/reservas/fxml/verReserva.fxml", controller);
+    }
+    @FXML void irAAuditarReservas(ActionEvent event) {
+        fis.dsw.sgc.reservas.controller.AuditarReservasController controller = new fis.dsw.sgc.reservas.controller.AuditarReservasController(servicioReservas);
+        cargarVista("/reservas/fxml/auditarReservas.fxml", controller);
+    }
 
     // ==================== Submenú Check-In ====================
 

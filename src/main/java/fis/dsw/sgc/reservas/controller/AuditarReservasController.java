@@ -74,7 +74,12 @@ public class AuditarReservasController {
     @FXML private Button btnAnadirMulta;
     @FXML private ChoiceBox<String> cbMotivoMulta;
 
-    private final IServicioReservas servicioReservas = ServicioReservasImpl.getInstancia();
+    private final IServicioReservas servicioReservas;
+
+    // Constructor para inyección de dependencias
+    public AuditarReservasController(IServicioReservas servicioReservas) {
+        this.servicioReservas = servicioReservas;
+    }
 
     private boolean aplicandoMulta = false;
     private Reserva reservaSeleccionadaParaObservacion = null;

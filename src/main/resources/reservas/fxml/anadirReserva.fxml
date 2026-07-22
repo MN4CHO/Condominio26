@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="TOP_CENTER" maxHeight="Infinity" maxWidth="Infinity" prefHeight="600.0" prefWidth="900.0" spacing="16.0" styleClass="module-content" stylesheets="@../css/reservasStyles.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fis.dsw.sgc.reservas.controller.AnadirReservaController">
+<VBox alignment="TOP_CENTER" maxHeight="Infinity" maxWidth="Infinity" prefHeight="600.0" prefWidth="900.0" spacing="16.0" styleClass="module-content" stylesheets="@../css/reservasStyles.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
 
    <padding>
       <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />

@@ -35,7 +35,12 @@ public class AnadirReservaController {
         return -1;
     }
 
-    private final IServicioReservas servicioReservas = ServicioReservasImpl.getInstancia();
+    private final IServicioReservas servicioReservas;
+
+    // Constructor para inyección de dependencias
+    public AnadirReservaController(IServicioReservas servicioReservas) {
+        this.servicioReservas = servicioReservas;
+    }
 
     // Mapa nombre-espacio -> datos del espacio (para obtener id, costo, etc.)
     private final Map<String, EspacioReservableDTO> espaciosPorNombre = new LinkedHashMap<>();
