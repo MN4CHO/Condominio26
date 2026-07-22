@@ -17,5 +17,13 @@ public class EstadoPendiente implements IEstadoDeuda {
     }
 
     @Override
-    public String getNombreEstado() { return "PENDIENTE"; }
+    public String getNombreEstadoBD() {
+        return "PENDIENTE";
+    }
+
+    @Override
+    public String getNombreEstadoUI() {
+        return "Pendiente";
+    }
+
 }

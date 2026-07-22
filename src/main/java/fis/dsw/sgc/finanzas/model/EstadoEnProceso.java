@@ -17,5 +17,12 @@ public class EstadoEnProceso implements IEstadoDeuda {
     }
 
     @Override
-    public String getNombreEstado() { return "EN PROCESO"; }
+    public String getNombreEstadoBD() {
+        return "EN_PROCESO";
+    }
+
+    @Override
+    public String getNombreEstadoUI() {
+        return "En Proceso";
+    }
 }

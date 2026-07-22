@@ -4,6 +4,10 @@ public class PagoTarjeta implements ITipoPago {
     private String numeroTarjeta;
     private String codigoTransaccion;
 
+    public String getCodigoTransaccion() {
+        return this.codigoTransaccion;
+    }
+
     public PagoTarjeta(String numeroTarjeta) {
         this.numeroTarjeta = numeroTarjeta;
     }

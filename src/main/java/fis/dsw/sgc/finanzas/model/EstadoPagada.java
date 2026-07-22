@@ -17,5 +17,12 @@ public class EstadoPagada implements IEstadoDeuda {
     }
 
     @Override
-    public String getNombreEstado() { return "PAGADA"; }
+    public String getNombreEstadoBD() {
+        return "PAGADA";
+    }
+
+    @Override
+    public String getNombreEstadoUI() {
+        return "Pagada ";
+    }
 }

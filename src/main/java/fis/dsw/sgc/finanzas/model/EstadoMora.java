@@ -17,5 +17,12 @@ public class EstadoMora implements IEstadoDeuda {
     }
 
     @Override
-    public String getNombreEstado() { return "EN MORA"; }
+    public String getNombreEstadoBD() {
+        return "EN_MORA";
+    }
+
+    @Override
+    public String getNombreEstadoUI() {
+        return "En mora";
+    }
 }

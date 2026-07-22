@@ -3,6 +3,10 @@ package fis.dsw.sgc.finanzas.model;
 public class PagoTransferencia implements ITipoPago {
     private String comprobanteTransferencia;
 
+    public String getComprobanteTransferencia() {
+        return this.comprobanteTransferencia;
+    }
+
     public PagoTransferencia(String comprobanteTransferencia) {
         this.comprobanteTransferencia = comprobanteTransferencia;
     }
