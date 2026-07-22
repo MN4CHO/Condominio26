@@ -16,4 +16,20 @@ public interface IComunicacionService {
     List<HistorialDTO> buscarHistorial(LocalDate desde, LocalDate hasta, String tipo,
                                        String estado, String criterio);
     List<ResumenReporteDTO> generarResumen(LocalDate inicio, LocalDate fin, String tipo);
+    List<NotificacionDTO> buscarNotificacionesPorUsuario(
+            long idUsuario,
+            String tipo,
+            String estado,
+            String criterio
+    );
+
+    void marcarNotificacionLeidaPorUsuario(
+            long idNotificacion,
+            long idUsuario
+    );
+
+    void eliminarNotificacionPorUsuario(
+            long idNotificacion,
+            long idUsuario
+    );
 }

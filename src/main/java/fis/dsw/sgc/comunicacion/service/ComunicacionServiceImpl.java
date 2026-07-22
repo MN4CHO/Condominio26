@@ -217,7 +217,84 @@ public class ComunicacionServiceImpl
             );
         }
     }
+    @Override
+    public List<NotificacionDTO> buscarNotificacionesPorUsuario(
+            long idUsuario,
+            String tipo,
+            String estado,
+            String criterio
+    ) {
+        validarId(idUsuario);
 
+        try {
+            String codigoTipo =
+                    ComunicacionCatalogos.codigoTipoNotificacion(
+                            tipo
+                    );
+
+            String codigoEstado =
+                    ComunicacionCatalogos.codigoEstadoNotificacion(
+                            estado
+                    );
+
+            return dao.buscarNotificacionesPorUsuario(
+                    idUsuario,
+                    codigoTipo,
+                    codigoEstado,
+                    criterio
+            );
+
+        } catch (SQLException exception) {
+            throw error(
+                    "No se cargaron las notificaciones del usuario.",
+                    exception
+            );
+        }
+    }
+
+    @Override
+    public void marcarNotificacionLeidaPorUsuario(
+            long idNotificacion,
+            long idUsuario
+    ) {
+        validarId(idNotificacion);
+        validarId(idUsuario);
+
+        try {
+            dao.marcarNotificacionLeidaPorUsuario(
+                    idNotificacion,
+                    idUsuario
+            );
+
+        } catch (SQLException exception) {
+            throw error(
+                    "No se pudo marcar la notificación como leída.",
+                    exception
+            );
+        }
+    }
+
+    @Override
+    public void eliminarNotificacionPorUsuario(
+            long idNotificacion,
+            long idUsuario
+    ) {
+        validarId(idNotificacion);
+        validarId(idUsuario);
+
+        try {
+            dao.eliminarNotificacionPorUsuario(
+                    idNotificacion,
+                    idUsuario
+            );
+
+        } catch (SQLException exception) {
+            throw error(
+                    "No se pudo eliminar la notificación del usuario.",
+                    exception
+            );
+        }
+    }
     @Override
     public List<HistorialDTO> buscarHistorial(
             LocalDate desde,

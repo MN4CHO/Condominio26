@@ -280,7 +280,151 @@ public class ComunicacionDAOSQLite implements IComunicacionDAO {
             if (ps.executeUpdate()==0) throw new SQLException("La notificación ya no existe.");
         }
     }
+    @Override
+    public void marcarNotificacionLeidaPorUsuario(
+            long idNotificacion,
+            long idUsuario
+    ) throws SQLException {
 
+        if (idNotificacion <= 0 || idUsuario <= 0) {
+            throw new SQLException(
+                    "Los identificadores de la notificación y del usuario no son válidos."
+            );
+        }
+
+        String sql = """
+        UPDATE notificacion
+        SET leida = 1,
+            fecha_lectura = CURRENT_TIMESTAMP,
+            estado = 'LEIDA'
+        WHERE id_notificacion = ?
+          AND id_usuario = ?
+          AND estado <> 'ELIMINADA'
+        """;
+
+        try (PreparedStatement ps =
+                     conexion().prepareStatement(sql)) {
+
+            ps.setLong(1, idNotificacion);
+            ps.setLong(2, idUsuario);
+
+            int filasActualizadas = ps.executeUpdate();
+
+            if (filasActualizadas == 0) {
+                throw new SQLException(
+                        "La notificación no existe o no pertenece al usuario autenticado."
+                );
+            }
+        }
+    }
+    @Override
+    public List<NotificacionDTO> buscarNotificacionesPorUsuario(
+            long idUsuario,
+            String tipo,
+            String estado,
+            String criterio
+    ) throws SQLException {
+
+        if (idUsuario <= 0) {
+            throw new SQLException(
+                    "El identificador del usuario no es válido."
+            );
+        }
+
+        StringBuilder sql = new StringBuilder("""
+        SELECT n.id_notificacion,
+               strftime(
+                   '%d/%m/%Y %H:%M',
+                   n.fecha_creacion
+               ) AS fecha,
+               n.tipo,
+               TRIM(
+                   u.nombres || ' ' || u.apellidos
+               ) AS destinatario,
+               n.titulo,
+               n.estado
+        FROM notificacion n
+        JOIN usuario u
+          ON u.id_usuario = n.id_usuario
+        WHERE n.id_usuario = ?
+        """);
+
+        List<Object> parametros = new ArrayList<>();
+        parametros.add(idUsuario);
+
+        if (tipo != null && !tipo.isBlank()) {
+            sql.append(" AND n.tipo = ?");
+            parametros.add(tipo);
+        }
+
+        if (estado != null && !estado.isBlank()) {
+            sql.append(" AND n.estado = ?");
+            parametros.add(estado);
+        } else {
+            sql.append(" AND n.estado <> 'ELIMINADA'");
+        }
+
+        if (criterio != null && !criterio.isBlank()) {
+            sql.append("""
+            AND (
+                LOWER(n.titulo) LIKE ?
+                OR LOWER(n.contenido) LIKE ?
+            )
+            """);
+
+            String patron =
+                    "%"
+                            + criterio.trim()
+                            .toLowerCase(Locale.ROOT)
+                            + "%";
+
+            parametros.add(patron);
+            parametros.add(patron);
+        }
+
+        sql.append(" ORDER BY n.fecha_creacion DESC");
+
+        List<NotificacionDTO> lista =
+                new ArrayList<>();
+
+        try (
+                PreparedStatement ps =
+                        conexion().prepareStatement(
+                                sql.toString()
+                        )
+        ) {
+            parametros(ps, parametros);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(
+                            new NotificacionDTO(
+                                    rs.getLong(
+                                            "id_notificacion"
+                                    ),
+                                    seguro(
+                                            rs.getString("fecha")
+                                    ),
+                                    ComunicacionCatalogos
+                                            .etiquetaTipo(
+                                                    rs.getString("tipo")
+                                            ),
+                                    rs.getString(
+                                            "destinatario"
+                                    ),
+                                    rs.getString("titulo"),
+                                    ComunicacionCatalogos
+                                            .etiquetaEstado(
+                                                    rs.getString("estado")
+                                            )
+                            )
+                    );
+                }
+            }
+        }
+
+        return lista;
+    }
     @Override
     public void eliminarNotificacion(long id) throws SQLException {
         Connection c=conexion();
@@ -312,7 +456,41 @@ public class ComunicacionDAOSQLite implements IComunicacionDAO {
             c.setAutoCommit(anterior);
         }
     }
+    @Override
+    public void eliminarNotificacionPorUsuario(
+            long idNotificacion,
+            long idUsuario
+    ) throws SQLException {
 
+        if (idNotificacion <= 0 || idUsuario <= 0) {
+            throw new SQLException(
+                    "Los identificadores de la notificación y del usuario no son válidos."
+            );
+        }
+
+        String sql = """
+        UPDATE notificacion
+        SET estado = 'ELIMINADA'
+        WHERE id_notificacion = ?
+          AND id_usuario = ?
+          AND estado <> 'ELIMINADA'
+        """;
+
+        try (PreparedStatement ps =
+                     conexion().prepareStatement(sql)) {
+
+            ps.setLong(1, idNotificacion);
+            ps.setLong(2, idUsuario);
+
+            int filasActualizadas = ps.executeUpdate();
+
+            if (filasActualizadas == 0) {
+                throw new SQLException(
+                        "La notificación no existe o no pertenece al usuario autenticado."
+                );
+            }
+        }
+    }
     @Override
     public List<HistorialDTO> buscarHistorial(LocalDate desde, LocalDate hasta, String tipo,
                                               String estado, String criterio) throws SQLException {

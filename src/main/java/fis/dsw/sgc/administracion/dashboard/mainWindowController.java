@@ -287,7 +287,7 @@ public class mainWindowController {
         cargarVista("/finanzas/fxml/generarRendicionCuentas.fxml",generarRendicionCuentasController);    }
     @FXML void irAConsultarDeudas(ActionEvent event)         {
         ConsultarDeudasController consultarDeudasController = new ConsultarDeudasController(deudaService);
-        cargarVista("/finanzas/fxml/consultarDeudas.fxml");         }
+        cargarVista("/finanzas/fxml/consultarDeudas.fxml",consultarDeudasController);         }
     @FXML void irARegistrarDeuda(ActionEvent event)         {
         RegistrarDeudaController registrarDeudaController = new RegistrarDeudaController(deudaService);
         cargarVista("/finanzas/fxml/registrarDeuda.fxml",registrarDeudaController);         }
@@ -303,14 +303,15 @@ public class mainWindowController {
     @FXML void irASolicitarPagoEnCuotas(ActionEvent event)         {
         SolicitarPagoEnCuotasController solicitarPagoEnCuotasController = new SolicitarPagoEnCuotasController(deudaService);
         cargarVista("/finanzas/fxml/solicitarPagoEnCuotas.fxml", solicitarPagoEnCuotasController);         }
-
     @FXML void irAConsultarReporteRendicionCuentas(ActionEvent event)         {
         ConsultarRendicionCuentasController consultarRendicionCuentasController = new ConsultarRendicionCuentasController(reportesService);
         cargarVista("/finanzas/fxml/consultarRendicionCuentas.fxml",consultarRendicionCuentasController);         }
     @FXML void irAGenerarReportePagosInternos(ActionEvent event)     {
         GenerarReportePagosRealizadosController generarReportePagosRealizadosController = new GenerarReportePagosRealizadosController(reportesService);
         cargarVista("/finanzas/fxml/generarReportePagosRealizados.fxml", generarReportePagosRealizadosController);    }
-    @FXML void irAGenerarCertificadoNoDeudor(ActionEvent event)      { cargarVista("/finanzas/fxml/generarCertificadoNoDeudor.fxml");         }
+    @FXML void irAGenerarCertificadoNoDeudor(ActionEvent event)      {
+        GenerarCertificadoNoDeudorController certificadoNoDeudorController = new GenerarCertificadoNoDeudorController(reportesService);
+        cargarVista("/finanzas/fxml/generarCertificadoNoDeudor.fxml", certificadoNoDeudorController);         }
 
     // ==================== Submenú Inmuebles ====================
 
@@ -347,9 +348,7 @@ public class mainWindowController {
 
     @FXML
     void irANotificaciones(ActionEvent event) {
-        // Se eliminó la lógica que forzaba el cierre de los menús al ver las notificaciones
-        contentPane.getChildren().clear();
-        contentPane.getChildren().add(crearPlaceholder("No hay notificaciones"));
+        cargarVista("/comunicacion/fxml/misNotificaciones.fxml");
     }
 
     // ==================== Botones de ejemplo (pendientes de definir) ====================
