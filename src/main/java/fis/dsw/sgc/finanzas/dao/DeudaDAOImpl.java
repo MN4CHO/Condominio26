@@ -124,6 +124,26 @@ public class DeudaDAOImpl implements IDeudaDAO {
         return false;
     }
 
+    @Override
+    public List<Deuda> consultarDeudasEnMora(int idUsuario) {
+        List<Deuda> deudas = new ArrayList<>();
+        String sql = "SELECT d.*, td.codigo as tipo_motivo FROM deuda d " +
+                "JOIN tipo_deuda td ON d.id_tipo_deuda = td.id_tipo_deuda " +
+                "WHERE d.id_usuario = ? AND d.estado = 'EN_MORA'";
+        try (Connection conn = DBConnection.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idUsuario);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                deudas.add(mapearDeuda(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al consultar deudas en mora por usuario.", e);
+        }
+        return deudas;
+    }
+
     // --- MÉTODOS PRIVADOS DE MAPEO ---
 
     private int obtenerIdTipoDeuda(Connection conn, String motivo) throws SQLException {

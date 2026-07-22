@@ -17,7 +17,10 @@ public class FachadaParaReservasImpl implements IFachadaParaReservas {
         deudaService.registrarDeuda(nuevaDeuda);
     }
 
-
+    @Override
+    public boolean tieneDeudasEnMora(String numeroCedulaResidente) {
+        return deudaService.consultarDeudasEnMora(numeroCedulaResidente);
+    }
 
 
 }

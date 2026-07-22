@@ -8,4 +8,5 @@ import java.time.LocalDate;
 public interface IFachadaParaReservas {
 
     void registrarDeuda(NuevaDeudaDTO nuevaDeuda);
+    boolean tieneDeudasEnMora(String numeroCedulaResidente);
 }

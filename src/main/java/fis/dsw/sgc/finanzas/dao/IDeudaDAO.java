@@ -9,4 +9,5 @@ public interface IDeudaDAO {
     Deuda buscarPorId(int idDeuda);
     List<Deuda> buscarDeudasActivasPorUsuario(int idUsuario);
     boolean verificarDeudasEnMoraPorUsuario(int idUsuario);
+    List<Deuda> consultarDeudasEnMora(int idUsuario);
 }

@@ -44,7 +44,7 @@ public class ConsultarDeudasController {
     @FXML private TableColumn<DeudaFila, String> colValor;
     @FXML private TableColumn<DeudaFila, String> colFechaMax;
     @FXML private TableColumn<DeudaFila, String> colEstado;
-    @FXML private TableColumn<DeudaFila, String> colDescripcion;
+
     @FXML private TableColumn<DeudaFila, Void> colOpciones;
 
     private final ObservableList<DeudaFila> filas = FXCollections.observableArrayList();
@@ -66,7 +66,7 @@ public class ConsultarDeudasController {
         colValor.setCellValueFactory(new PropertyValueFactory<>("valor"));
         colFechaMax.setCellValueFactory(new PropertyValueFactory<>("fechaMaximaPago"));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+
         tablaDeudas.setItems(filas);
         tablaDeudas.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
@@ -181,7 +181,7 @@ public class ConsultarDeudasController {
         String valor = dto.getSaldoPendiente() == null ? ""
                 : String.format(Locale.US, "$%.2f", dto.getSaldoPendiente());
         String fecha = dto.getFechaVencimiento() == null ? "" : dto.getFechaVencimiento().toString();
-        return new DeudaFila(id, dto.getMotivo(), valor, fecha, dto.getEstadoActual(), "");
+        return new DeudaFila(id, dto.getMotivo(), valor, fecha, dto.getEstadoActual());
     }
 
     @FXML
@@ -214,16 +214,15 @@ public class ConsultarDeudasController {
         private final String valor;
         private String fechaMaximaPago;
         private String estado;
-        private final String descripcion;
+
 
         public DeudaFila(String idDeuda, String motivo, String valor, String fechaMaximaPago,
-                         String estado, String descripcion) {
+                         String estado) {
             this.idDeuda = idDeuda;
             this.motivo = motivo;
             this.valor = valor;
             this.fechaMaximaPago = fechaMaximaPago;
             this.estado = estado;
-            this.descripcion = descripcion;
         }
 
         public String getIdDeuda() {
@@ -254,8 +253,5 @@ public class ConsultarDeudasController {
             this.estado = estado;
         }
 
-        public String getDescripcion() {
-            return descripcion;
-        }
     }
 }

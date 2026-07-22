@@ -187,6 +187,17 @@ public class DeudaServiceImpl implements IDeudaService {
     }
 
     @Override
+    public boolean consultarDeudasEnMora(String numeroCedulaResidente) {
+        try{
+            ResidenteFachadaDTO residente = gestionUsuariosAPI.obtenerResidentePorCedula(numeroCedulaResidente);
+            List<Deuda> deudasEnMora = deudaDAO.consultarDeudasEnMora(residente.getIdUsuario());
+            return !deudasEnMora.isEmpty();
+        }catch (ResidenteNoExisteException e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
     public void registrarDeudaAlicuotaMensual(String numeroCedulaResidente) {
         if (LocalDate.now().getDayOfMonth() != 1) return;
 
